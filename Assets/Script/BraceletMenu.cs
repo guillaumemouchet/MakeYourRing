@@ -18,9 +18,6 @@ public class BraceletMenu : MonoBehaviour
     private GameObject prefabButton;
 
     [SerializeField]
-    private GameObject debug; //DBUG
-
-    [SerializeField]
     private GameObject parent;
 
     public List<string> objFileList = new List<string>();
@@ -44,7 +41,6 @@ public class BraceletMenu : MonoBehaviour
         var globalPath = Application.dataPath + localPath;
         Debug.Log(globalPath);
 
-        debug.GetComponent<TextMeshProUGUI>().text = globalPath; //DEBUG
 
         //Get all files with .obj
         var info = new DirectoryInfo(globalPath);
@@ -112,7 +108,6 @@ public class BraceletMenu : MonoBehaviour
         #endif
 
         Debug.Log(globalPath);
-        debug.GetComponent<TextMeshProUGUI>().text = globalPath; //DEBUG
 
         OBJLoader objLoader = new OBJLoader();
         //Load the file

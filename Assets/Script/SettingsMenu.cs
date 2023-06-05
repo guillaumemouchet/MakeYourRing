@@ -25,9 +25,6 @@ public class SettingsMenu : MonoBehaviour
         [SerializeField]
         private GameObject settingsMenu;
 
-        [SerializeField]
-        private GameObject debugText; //DEBUG ONLY
-
         public void OnCloseClick()
         {
             settingsMenu.SetActive(false);
@@ -87,8 +84,6 @@ public class SettingsMenu : MonoBehaviour
         if(objPaths.Length>0)
         {
             objPath = objPaths[0];
-
-            debugText.GetComponent<TextMeshProUGUI>().text = objPath; //DEBUG
 
             OBJLoader objLoader = new OBJLoader();
 
@@ -152,7 +147,6 @@ public class SettingsMenu : MonoBehaviour
 
             string sourcePath = objPath;
             OBJExporter objExporter = new OBJExporter();
-            debugText.GetComponent<TextMeshProUGUI>().text = folderPath + localPath; //DEBUG
 
             //Save the object at the right place to use it easly after
             objExporter.Export(folderPath + localPath, obj); //C# function in objexporter

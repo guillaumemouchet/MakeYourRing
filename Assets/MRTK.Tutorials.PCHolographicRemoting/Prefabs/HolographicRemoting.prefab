@@ -43,10 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b9ce6ef60864645a1e9ff0ca0aa81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IP: 
-  remotingConfiguration:
+  IP_1: 157.26.108.2
+  remotingConfiguration_1:
     RemoteHostName: 
     RemotePort: 8265
-    MaxBitrateKbps: 20000
-    VideoCodec: 0
+    MaxBitrateKbps: 1000
+    VideoCodec: 2
     EnableAudio: 0

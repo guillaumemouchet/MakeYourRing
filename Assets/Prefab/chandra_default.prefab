@@ -97,11 +97,11 @@ GameObject:
   - component: {fileID: 5682215464768289676}
   m_Layer: 0
   m_Name: chandra_default
-  m_TagString: Untagged
+  m_TagString: jewel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5682215464768289680
 Transform:
   m_ObjectHideFlags: 0
