@@ -21,7 +21,7 @@ public class MergeJewel : MonoBehaviour
        
         if (leader != null)
         {
-            if(this.CompareTag("leader"))//shouldn't be true
+            if(this.CompareTag("leader")) //shouldn't be true
             {
                 leader = null;
                 
@@ -30,6 +30,7 @@ public class MergeJewel : MonoBehaviour
 
                 //Calculer la distance par rapport à tous les éléments de notre leader et si le plus petit est plus grand que notre limite alors on sépare???
 
+                //Calculate the distance between each element child of our leader, and if the closest is too far from our limit we split them
                 Vector3 localPosition = this.transform.position;
                 List<float> listDistance = new List<float>
                 {
@@ -46,11 +47,12 @@ public class MergeJewel : MonoBehaviour
                     }
                 }
 
-
+                //Need to remove the value at 0, it's when we compare the object with itself
                 var itemToRemove = listDistance.SingleOrDefault(r => r == 0);
                 if (itemToRemove != null)
                     listDistance.Remove(itemToRemove);
 
+                //take the smallest value
                 float distance = listDistance.Min();
                 if (distance > limite)
                 {
@@ -122,8 +124,6 @@ public class MergeJewel : MonoBehaviour
 
         GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem = this.gameObject;
 
-
-        //Deactivate the children???
         //Check child of this
         List<GameObject> listThis = new List<GameObject>();
         this.gameObject.GetChildGameObjects(listThis);
@@ -144,8 +144,6 @@ public class MergeJewel : MonoBehaviour
     {
         Debug.Log("End Selection restore features");
 
-
-        //Deactivate the children???
         //Check child of this
         List<GameObject> listThis = new List<GameObject>();
         this.gameObject.GetChildGameObjects(listThis);
@@ -164,6 +162,7 @@ public class MergeJewel : MonoBehaviour
     /// The merge depends on if they are already a leader or not
     /// </summary>
     /// <param name="other">the Collision Collider of the other GameObject it touched</param>
+    //TODO : CHECK it all, doesn't seems nor perfect nor clean but it works
     private void OnCollisionEnter(Collision other)
     {
 
@@ -172,14 +171,13 @@ public class MergeJewel : MonoBehaviour
             Debug.Log("-----------Triggered by " + this.gameObject + "-------------------------");
             Debug.Log("Other " + other.gameObject.name);
             Debug.Log("this " + this.gameObject.name);
-            //Debug.Log(other.relativeVelocity);
 
 
             // JEWEL TRIGGER JEWEL
             if(other.gameObject.CompareTag("jewel") && this.gameObject.CompareTag("jewel")) //Toujours dire que c'est le other qui devient le leader sinon on sait pas comment les séparer
             {
                 Debug.Log("Merge to Jewel");
-                if(this.leader != null && other.gameObject.GetComponent<MergeJewel>().leader != null) //C'est un peu bourré, je suis pas convaincu
+                if(this.leader != null && other.gameObject.GetComponent<MergeJewel>().leader != null)
                 {
                     Debug.Log(" TWO LEADER");
                     other.gameObject.GetComponent<MergeJewel>().leader.transform.SetParent(this.leader.transform);
@@ -232,37 +230,6 @@ public class MergeJewel : MonoBehaviour
                 other.transform.SetParent(this.transform);
                 return;
             }
-            /*Transforme 2 objet en 1 nouveau */
-                /*
-
-                Debug.Log("Merge this " + gameObject.name);
-                Debug.Log("Merge other " + other.gameObject.name);
-
-                if(other.gameObject.CompareTag("leader")) //other is already leader
-                {
-                    other.gameObject.tag = "leader";
-                    leader = other.gameObject;
-                    this.transform.SetParent(other.transform, true);
-                }else if(this.gameObject.CompareTag("leader")) //this is the leader of the group
-                {
-                    leader = this.gameObject;
-                    other.transform.SetParent(this.transform, true);
-                }else if(other.gameObject.CompareTag("jewel")) //aucun des deux n'est leader
-                {
-                    if (leader == null)
-                    {
-                        other.gameObject.tag = "leader";
-                        leader = other.gameObject;
-                        this.transform.SetParent(other.transform, true);
-                    }else
-                    {
-                        leader.tag = "leader";
-                        this.transform.SetParent(leader.transform,true);
-                        other.transform.SetParent(leader.transform, true);
-                    }
-                }
-                */
-                //todo look in children if their is a leader???
         }
 
     }

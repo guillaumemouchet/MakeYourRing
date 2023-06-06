@@ -74,15 +74,13 @@ public class BraceletMenu : MonoBehaviour
 
     }
 
-    
-
 
     /// <summary>
-    /// This method add quick button for debug purpous
+    /// This method adds quick button for debug purpous
     /// </summary>
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(220, 110, 150, 40), "item click bracelet 0"))
+        if (GUI.Button(new Rect(370, 40, 150, 40), "item click bracelet 0"))
         {
             onItemClickDebug(0);
 

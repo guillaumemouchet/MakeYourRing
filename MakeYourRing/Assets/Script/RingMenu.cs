@@ -78,7 +78,7 @@ public class RingMenu : MonoBehaviour
     /// </summary>
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(330, 110, 150, 40), "item click ring 0"))
+        if (GUI.Button(new Rect(220, 40, 150, 40), "item click ring 0"))
         {
             onItemClickDebug(0);
         }

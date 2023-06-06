@@ -25,16 +25,19 @@ public class HolographicRemoteConnect : MonoBehaviour
     private bool connected = false;
 
     [SerializeField, Tooltip("The configuration information for the remote connection.")]
+    // Parameters where given in the example, changing them doens't help with the fps
     private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 1000, VideoCodec = RemotingVideoCodec.H264};
     /**
      * Changing the codex doesn't change the FPS
      * Changing the MaxBitrate doestn't change the FPS
      * */
 
+    /// <summary>
+    /// Connect the application to the hololens using AppRemoting
+    /// </summary>
     public void Connect()
     {
         connected = true;
-        XRSettings.renderViewportScale = 0.7f; //Changing the renderView doesn't change the FPS
         remotingConfiguration_1.RemoteHostName = IP_1;
 
         /**
@@ -45,7 +48,9 @@ public class HolographicRemoteConnect : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Add a button to connect to the provided IP
+    /// </summary>
     private void OnGUI()
     {
         IP_1 = GUI.TextField(new Rect(10, 10, 200, 30), IP_1, 25);

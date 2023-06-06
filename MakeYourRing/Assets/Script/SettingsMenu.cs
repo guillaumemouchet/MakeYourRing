@@ -34,7 +34,6 @@ public class SettingsMenu : MonoBehaviour
     /// <summary>
     /// Save the leader object in the Result folder
     /// </summary>
-
     //TODO add confirmation message
     public void OnSaveClick()
          {
@@ -64,8 +63,8 @@ public class SettingsMenu : MonoBehaviour
 
     /// <summary>
     /// Import an .obj as a Gameobject in the scene and save it in the Resources folder.
+    /// Add a .meta file for his PNG and JPG files
     /// </summary>
-
     public void OnImportClick()
         {
 
@@ -87,15 +86,15 @@ public class SettingsMenu : MonoBehaviour
 
             OBJLoader objLoader = new OBJLoader();
 
-            //Creer à la volée des .meta pour tous le JPG ou png qu'on trouve
+            //Create at runtime ".meta" files for each PNG and JPG
             string directoryFolder = Path.GetDirectoryName(objPath);
 
-            //On fait que les .png et .jpg pour l'instant
+            //Only PNG and JPG files are done for know, more can easly be added if necessary
             IEnumerable<string> files = Directory.EnumerateFiles(directoryFolder, "*.*", SearchOption.AllDirectories)
                 .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                 .Where(file => !file.EndsWith(".obj", StringComparison.OrdinalIgnoreCase) && !file.EndsWith(".mtl", StringComparison.OrdinalIgnoreCase));
 
-            //Create a meta file foreach png or jpg
+            //Create a meta file foreach png or jpg files
             foreach (string file in files)
             {
                 Debug.Log("nom du fichier " + file);
@@ -170,13 +169,13 @@ public class SettingsMenu : MonoBehaviour
     /// </summary>
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(220, 30 , 100, 30), "import"))
+        if (GUI.Button(new Rect(320, 10, 100, 30), "Import"))
         {
            OnImportClick();
 
         }
 
-        if (GUI.Button(new Rect(220, 70, 100, 30 ), "save"))
+        if (GUI.Button(new Rect(420, 10, 100, 30 ), "Save"))
         {
             OnSaveClick();
 

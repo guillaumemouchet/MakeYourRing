@@ -1,6 +1,7 @@
 using Dummiesman;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,6 @@ public class Utility : MonoBehaviour
                 }
                 break;
 
-                //TODO
                 case jewelType.Bracelet:
                 {
                 #if UNITY_EDITOR
@@ -118,15 +118,17 @@ public class Utility : MonoBehaviour
         foreach (FileInfo obj in fileInfo)
         {
             string name = Path.GetFileNameWithoutExtension(obj.Name);
-            Debug.Log("onEnable " + name);
+            
+            //Debug.Log("onEnable " + name);
 
             objFileList.Add(name); //To use them later
 
-            //Retour à la ligne après 3
+            //wrap back after 3 elements
             if (i % 3 == 0 && i != 0)
             {
                 j++;
             }
+            //TODO find a solution for when we have more than 9 elements because they go out of the Panel
 
             // Changer the position of the new buttons
             Vector3 targetPosition = prefabButton.transform.position;
@@ -140,9 +142,10 @@ public class Utility : MonoBehaviour
 
             buttonList.Add(new_btn_prefab); //Used to destroy them later
 
-            //Create a listener to have an action linked to the right file
 
-            Debug.Log("Add Listener on " + i);
+            //Debug.Log("Add Listener on " + i);
+
+            //Create a listener to have an action linked to the right file
             int tempI = i;
             jewelType tempType = type;
             new_btn_prefab.GetComponent<ButtonConfigHelper>().OnClick.AddListener(delegate { onItemClick(tempI, objFileList, tempType); }); // change to temp value to not have the reference but the value only
@@ -161,10 +164,8 @@ public class Utility : MonoBehaviour
     /// <param name="type">Type of our item, will change the paths</param>
     private static void onItemClick(int i, List<string> objFileList, jewelType type)
     {
-        Debug.Log("On itemClick" + i);
-
+        //Debug.Log("On itemClick" + i);
         var globalPath = chooseClickPath(type, objFileList, i);
-        Debug.Log(globalPath);
 
         OBJLoader objLoader = new OBJLoader();
         //Load the file
@@ -185,9 +186,10 @@ public class Utility : MonoBehaviour
         obj.AddComponent<Rigidbody>();
         obj.tag = "jewel";
         obj.AddComponent<MeshCollider>();
-        obj.GetComponent<MeshCollider>().convex = true;
+        obj.GetComponent<MeshCollider>().convex = true; //Neceserry for something don't remember what
 
 
+        //Need to combine the collider with the children of the object to have only one of the good size and not multiple
         MeshFilter[] meshFilters = obj.GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 
@@ -205,33 +207,35 @@ public class Utility : MonoBehaviour
         //Resize the collider
         obj.GetComponent<MeshCollider>().sharedMesh = mesh;
 
+        //Sometimes the childs are invisible so we set them all active
         Transform children = obj.GetComponent<Transform>();
         for (int j = 0; j < children.childCount; j++)
         {
             children.GetChild(j).gameObject.SetActive(true);
         }
 
+        //So they don't fall nor go other space
         obj.GetComponent<Rigidbody>().isKinematic = true;
         obj.GetComponent<Rigidbody>().useGravity = true;
+
+        //Those component are those to move and interact with an Object
         obj.AddComponent<ConstraintManager>();
         obj.AddComponent<ObjectManipulator>();
-
         obj.AddComponent<NearInteractionGrabbable>();
 
-        //TODO see to change the size to have not too big things
-
-        //if (Math.Abs(obj.transform.localScale.z)> 0.05f)
-        //{
-        //    float ratio =  obj.transform.localScale.z / 0.05f; //Z devient 0.5
-        //    obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio); //DEBUG PURPOUS
-        //}
-
-        obj.transform.position = new Vector3(0, -0.1f, 1); //DEBUG
-
-        if (obj.transform.rotation.x < 90) //DEBUG
+        //Change the size to not be bigger than 0.5 in the relative world size
+        Vector3 size = obj.GetComponent<MeshCollider>().bounds.size;
+        if (Math.Abs(size.x) > 0.5f)
         {
-            obj.transform.Rotate(90, 0, 0);
+            float ratio = size.x / 0.5f; //X devient 0.5
+            obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio);
         }
+
+        //Place the object in front of the player
+        Transform cameratransform = GameObject.Find("UIRaycastCamera").transform;
+        obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward; 
+        obj.transform.rotation = cameratransform.rotation;
+
 
         return obj;
     }
