@@ -119,7 +119,7 @@ public class SettingsMenu : MonoBehaviour
             //Load the new object and give him his Components
             GameObject obj = objLoader.Load(objPath);
 
-            addImportantComponent(obj);
+            Utility.addImportantComponent(obj);
 
 
             //Choose if it's a bracelet or a ring
@@ -130,16 +130,16 @@ public class SettingsMenu : MonoBehaviour
             #endif
 
             string folderPath = "";
-            //To not make the programme crash if nothing is selected -> Default is Bracelet
+            //To not make the programme crash if nothing is selected -> Default is Ring
             if (folderPaths.Length > 0)
             {
                 folderPath = folderPaths[0];
             }else
             {
                 #if UNITY_EDITOR
-                    folderPath = Application.dataPath + "/Resources/Bracelet/";
+                    folderPath = Application.dataPath + "/Resources/Ring/";
                 #else
-                    folderPath = Application.dataPath + "/Assets/Resources/Bracelet/";
+                    folderPath = Application.dataPath + "/Assets/Resources/Ring/";
                 #endif
             }
 
@@ -162,67 +162,7 @@ public class SettingsMenu : MonoBehaviour
 
         }
 
-    /// <summary>
-    /// This method add all the Components to an .obj created in runtime
-    /// </summary>
-    /// <param name="obj">newly created GameObject</param>
-    /// <returns>Returns the same GameObject, normally not usefull</returns>
-    public GameObject addImportantComponent(GameObject obj)
-    {
-        obj.AddComponent<MergeJewel>();
-        obj.AddComponent<Rigidbody>();
-        obj.tag = "jewel";
-        obj.AddComponent<MeshCollider>();
-        obj.GetComponent<MeshCollider>().convex = true;
-
-
-        MeshFilter[] meshFilters = obj.GetComponentsInChildren<MeshFilter>();
-        CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-
-        int i = 0;
-        while (i < meshFilters.Length)
-        {
-            combine[i].mesh = meshFilters[i].sharedMesh;
-            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            meshFilters[i].gameObject.SetActive(false);
-
-            i++;
-        }
-        Mesh mesh = new Mesh();
-        mesh.CombineMeshes(combine);
-        //Resize the collider
-        obj.GetComponent<MeshCollider>().sharedMesh = mesh;
-
-        Transform children = obj.GetComponent<Transform>();
-        for (int j = 0; j < children.childCount; j++)
-        {
-            children.GetChild(j).gameObject.SetActive(true);
-        }
-
-        obj.GetComponent<Rigidbody>().isKinematic = true;
-        obj.GetComponent<Rigidbody>().useGravity = true;
-        obj.AddComponent<ConstraintManager>();
-        obj.AddComponent<ObjectManipulator>();
-       
-        obj.AddComponent<NearInteractionGrabbable>();
-
-        //TODO see to change the size to have not too big things
-
-                //if (Math.Abs(obj.transform.localScale.z)> 0.05f)
-                //{
-                //    float ratio =  obj.transform.localScale.z / 0.05f; //Z devient 0.5
-                //    obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio); //DEBUG PURPOUS
-                //}
-
-        obj.transform.position = new Vector3(0, -0.1f, 1); //DEBUG
-
-        if (obj.transform.rotation.x < 90) //DEBUG
-        {
-            obj.transform.Rotate(90, 0, 0);
-        }
-
-        return obj;
-    }
+    
 
 
     /// <summary>
