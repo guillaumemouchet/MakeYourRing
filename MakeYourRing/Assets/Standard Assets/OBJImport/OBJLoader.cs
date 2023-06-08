@@ -280,6 +280,8 @@ namespace Dummiesman
 
             //finally, put it all together
             GameObject obj = new GameObject(_objInfo != null ? Path.GetFileNameWithoutExtension(_objInfo.Name) : "WavefrontObject");
+
+            //What is this
             obj.transform.localScale = new Vector3(-1f, 1f, 1f);
 
             foreach (var builder in builderDict)

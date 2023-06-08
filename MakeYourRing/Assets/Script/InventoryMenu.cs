@@ -1,5 +1,9 @@
 using UnityEngine;
-
+/** This is the credits for all used icons from flaticon in agreament with their license
+ * Ring icon : designed by Freepik from Flaticon (https://www.flaticon.com/free-icon/ring-with-precious-stone_50372)
+ * Bracelet icon : designed by Darius Dan from Flaticon (https://www.flaticon.com/free-icon/bracelet_1319854)
+ * Bracelet_1 icon : designed by Ayub Irawan from Flaticon (https://www.flaticon.com/free-icon/bracelet_7966247)
+ **/
 /// <summary>
 /// Used for naviation purpous only
 /// </summary>

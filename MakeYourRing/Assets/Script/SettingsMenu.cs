@@ -17,7 +17,11 @@ using UnityEditor;
 using Windows.Storage;
 #endif
 
-
+/** This is the credits for all used icons from flaticon in agreament with their license
+ * Save icon : designed by Yogi Aprelliyanto from Flaticon (https://www.flaticon.com/free-icon/diskette_2874091)
+ * Import icon : designed by Pixel perfect from Flaticon (https://www.flaticon.com/free-icon/import_3199068)
+ * Display icon : designed by Freepik from Flaticon (https://www.flaticon.com/free-icon/mannequin_998774)
+ **/
 //TODO Toujours ajouter le dossier asset fournis dans le build, c'est le que le User devra venir stocker ses eléments (Ring, Bracelet, Result), l'autre asset en plus est juste pour le Debug
 public class SettingsMenu : MonoBehaviour
     {
@@ -37,8 +41,6 @@ public class SettingsMenu : MonoBehaviour
     //TODO add confirmation message
     public void OnSaveClick()
          {
-
-            //TODO Change how we choose what to save
             GameObject[] leaderObjects = GameObject.FindGameObjectsWithTag("leader");
             Debug.Log("onSaveClick, find all leader tag");
 
@@ -86,39 +88,12 @@ public class SettingsMenu : MonoBehaviour
 
             OBJLoader objLoader = new OBJLoader();
 
-            //Create at runtime ".meta" files for each PNG and JPG
-            string directoryFolder = Path.GetDirectoryName(objPath);
-
-            //Only PNG and JPG files are done for know, more can easly be added if necessary
-            IEnumerable<string> files = Directory.EnumerateFiles(directoryFolder, "*.*", SearchOption.AllDirectories)
-                .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-                .Where(file => !file.EndsWith(".obj", StringComparison.OrdinalIgnoreCase) && !file.EndsWith(".mtl", StringComparison.OrdinalIgnoreCase));
-
-            //Create a meta file foreach png or jpg files
-            foreach (string file in files)
-            {
-                Debug.Log("nom du fichier " + file);
-
-                //Create a new meta file
-                #if UNITY_EDITOR
-                    string ExamplePath = "/Resources/EXAMPLE.txt";
-                #else
-                    string ExamplePath = "/Assets/Resources/EXAMPLE.txt";
-                #endif
-
-                Debug.Log("EXAMPLE file " + Application.dataPath + ExamplePath);
-                string contentMeta = File.ReadAllText(Application.dataPath + ExamplePath);
-
-                string exportNameMeta = file + ".meta";
-                Debug.Log("exportNameMeta Meta " + exportNameMeta);
-
-                System.IO.File.WriteAllText(exportNameMeta, contentMeta);
-            }
+            Utility.createMetaDataFile(objPath);
 
             //Load the new object and give him his Components
             GameObject obj = objLoader.Load(objPath);
 
-            Utility.addImportantComponent(obj);
+            obj = Utility.addImportantComponent(obj);
 
 
             //Choose if it's a bracelet or a ring
@@ -144,12 +119,23 @@ public class SettingsMenu : MonoBehaviour
 
             string localPath = "\\" + obj.name + ".obj";
 
-            string sourcePath = objPath;
             OBJExporter objExporter = new OBJExporter();
 
             //Save the object at the right place to use it easly after
             objExporter.Export(folderPath + localPath, obj); //C# function in objexporter
-            Debug.Log(folderPath);
+            Debug.Log(folderPath + localPath);
+
+
+            //DEBUG TEST
+            //Destroy(obj);
+
+            ////Reimport all after normalisation of the export
+            //Utility.createMetaDataFile(folderPath + localPath);
+
+            //GameObject new_obj = objLoader.Load(folderPath + localPath);
+
+            //Utility.addImportantComponent(new_obj);
+
         }
         
     }
@@ -160,9 +146,6 @@ public class SettingsMenu : MonoBehaviour
             Debug.Log("onDisplayClick");
 
         }
-
-    
-
 
     /// <summary>
     /// This method add quick button for debug purpous

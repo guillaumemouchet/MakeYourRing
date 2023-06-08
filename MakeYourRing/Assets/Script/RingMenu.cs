@@ -1,14 +1,20 @@
 using Dummiesman;
 using Microsoft.MixedReality.Toolkit.UI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 
 
-//TODO : Code like Bracelet Menu with some small modifications
 public class RingMenu : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject btnBack;
+
+    [SerializeField]
+    private GameObject btnFront;
+
     [SerializeField]
     private GameObject ringMenu;
 
@@ -22,16 +28,77 @@ public class RingMenu : MonoBehaviour
 
     private List<GameObject> buttonList = new List<GameObject>();
 
+    public int numberOfPages;
+    public int currentPage = 1;
+
+    private double nbElementPerPages = 9.0;
+
+
     void OnDisable()
     {
         objFileList.Clear();
     }
 
+
+    /// <summary>
+    /// Create the first page for the pagination, as well as couting the max number of pages
+    /// </summary>
     void OnEnable()
     {
-        ////Create a button for each .obj in our resource folder
-        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring);       
+        currentPage = 1;
+        numberOfPages = (int)Math.Ceiling(Utility.countNumberOfButton(Utility.jewelType.Ring) / nbElementPerPages);
 
+        ////Create a button for each .obj in our resource folder
+        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring, currentPage);
+        btnBack.SetActive(false);
+
+        btnFront.SetActive(numberOfPages>1);
+    }
+
+
+    /// <summary>
+    /// Change the current pagination and display other GameObjects
+    /// Change visibily of the buttons depending on the number of pages
+    /// </summary>
+    public void onBackClick()
+    {
+        Debug.Log("Back click");
+
+        foreach (GameObject btn in buttonList)
+        {
+            Debug.Log("Destroy button");
+            Destroy(btn);
+        }
+        currentPage--;
+        //Display new
+        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring, currentPage);
+
+        btnFront.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
+
+        btnFront.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+
+    }
+
+
+    /// <summary>
+    /// Change the current pagination and display other GameObjects
+    /// Change visibily of the buttons depending on the number of pages
+    /// </summary>
+    public void onFrontClick()
+    {
+        Debug.Log("Front click");
+        foreach (GameObject btn in buttonList)
+        {
+            Debug.Log("Destroy button");
+            Destroy(btn);
+        }
+        currentPage++;
+        //display new
+        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring, currentPage);
+
+        btnFront.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
+
+        btnFront.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
     }
 
     /// <summary>
@@ -41,7 +108,7 @@ public class RingMenu : MonoBehaviour
     {
         foreach (GameObject btn in buttonList)
         {
-            Debug.Log("DESTOY");
+            Debug.Log("Destroy button");
             Destroy(btn);
         }
         ringMenu.SetActive(false);

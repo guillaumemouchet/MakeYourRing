@@ -1,0 +1,12 @@
+newmtl BACK_VIEW.011
+Kd 1 1 1
+Ks 0.1999999 0.1999999 0.1999999
+map_Kd chandra_back2.jpg
+illum 2
+
+newmtl FRONT_VIEW.012
+Kd 1 1 1
+Ks 0.1999999 0.1999999 0.1999999
+map_Kd chandra_front2.jpg
+illum 2
+

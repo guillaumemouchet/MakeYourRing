@@ -11,7 +11,6 @@ using UnityEngine;
 public class Utility : MonoBehaviour
 {
 
-
     public enum jewelType
     {
         Ring,
@@ -96,6 +95,22 @@ public class Utility : MonoBehaviour
         return globalPath;
     }
 
+
+    /// <summary>
+    /// Counts the number of file that are .obj in our folder
+    /// </summary>
+    /// <param name="type">Type of our item, will change the paths</param>
+    /// <returns type="int">The size of our list</returns>
+    public static int countNumberOfButton(jewelType type)
+    {
+        var globalPath = chooseEnablePath(type);
+
+        //Get all files with .obj
+        var info = new DirectoryInfo(globalPath);
+        var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
+        return fileInfo.Count;
+    }
+
     /// <summary>
     /// Create a dynamic button for each found .obj in our folder
     /// </summary>
@@ -104,18 +119,22 @@ public class Utility : MonoBehaviour
     /// <param name="buttonList">List of all the button, used to destroy them when closed</param>
     /// <param name="parent">parent object of the prefab, used to have position</param>
     /// <param name="type">Type of our item, will change the paths</param>
-
-    public static void createButton(List<string> objFileList, GameObject prefabButton, List<GameObject> buttonList, GameObject parent, jewelType type)
+    /// <param name="currentPage">We can only display 9 elements at a time, so we need to have pagination</param>
+    public static void createButton(List<string> objFileList, GameObject prefabButton, List<GameObject> buttonList, GameObject parent, jewelType type, int currentPage)
     {
-
+        var nbElementPerPage = 9; //max number by panel, 
         var globalPath = chooseEnablePath(type);
 
         //Get all files with .obj
         var info = new DirectoryInfo(globalPath);
         var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
+        int count = Math.Min(nbElementPerPage, fileInfo.Count-nbElementPerPage*(currentPage-1));
+
+        var subList = fileInfo.GetRange((currentPage - 1) * nbElementPerPage, count); //Create a sublist of the element we want to display
+
         int i = 0;
         int j = 0;
-        foreach (FileInfo obj in fileInfo)
+        foreach (FileInfo obj in subList)
         {
             string name = Path.GetFileNameWithoutExtension(obj.Name);
             
@@ -128,7 +147,6 @@ public class Utility : MonoBehaviour
             {
                 j++;
             }
-            //TODO find a solution for when we have more than 9 elements because they go out of the Panel
 
             // Changer the position of the new buttons
             Vector3 targetPosition = prefabButton.transform.position;
@@ -146,7 +164,7 @@ public class Utility : MonoBehaviour
             //Debug.Log("Add Listener on " + i);
 
             //Create a listener to have an action linked to the right file
-            int tempI = i;
+            int tempI = i+ (currentPage - 1) * nbElementPerPage;
             jewelType tempType = type;
             new_btn_prefab.GetComponent<ButtonConfigHelper>().OnClick.AddListener(delegate { onItemClick(tempI, objFileList, tempType); }); // change to temp value to not have the reference but the value only
             i++;
@@ -171,7 +189,15 @@ public class Utility : MonoBehaviour
         //Load the file
         GameObject obj = objLoader.Load(globalPath);
 
-        addImportantComponent(obj);
+        obj = addImportantComponent(obj);
+
+        //This isn't the best solution -> TODO : find better solution
+        //But when an saved .obj is reloaded it's text is reversed so need to do a small correction
+        Transform objTransform = obj.GetComponent<Transform>();
+        for (int j = 0; j < objTransform.childCount; j++)
+        {
+            objTransform.GetChild(j).transform.localScale = new Vector3(objTransform.GetChild(j).transform.localScale.x * -1, objTransform.GetChild(j).transform.localScale.y, objTransform.GetChild(j).transform.localScale.z);
+        }
     }
 
 
@@ -208,15 +234,16 @@ public class Utility : MonoBehaviour
         obj.GetComponent<MeshCollider>().sharedMesh = mesh;
 
         //Sometimes the childs are invisible so we set them all active
-        Transform children = obj.GetComponent<Transform>();
-        for (int j = 0; j < children.childCount; j++)
+        Transform objTransform = obj.GetComponent<Transform>();
+        for (int j = 0; j < objTransform.childCount; j++)
         {
-            children.GetChild(j).gameObject.SetActive(true);
+            objTransform.GetChild(j).gameObject.SetActive(true);
         }
 
         //So they don't fall nor go other space
         obj.GetComponent<Rigidbody>().isKinematic = true;
         obj.GetComponent<Rigidbody>().useGravity = true;
+        obj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
         //Those component are those to move and interact with an Object
         obj.AddComponent<ConstraintManager>();
@@ -227,16 +254,51 @@ public class Utility : MonoBehaviour
         Vector3 size = obj.GetComponent<MeshCollider>().bounds.size;
         if (Math.Abs(size.x) > 0.5f)
         {
-            float ratio = size.x / 0.5f; //X devient 0.5
+            Debug.Log("size en x " + size.x);
+
+            float ratio = (size.x) / 0.5f;
+            Debug.Log("ratio " + ratio);
             obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio);
         }
 
-        //Place the object in front of the player
+        ////Place the object in front of the player
         Transform cameratransform = GameObject.Find("UIRaycastCamera").transform;
         obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward; 
-        obj.transform.rotation = cameratransform.rotation;
-
+        obj.transform.rotation = new Quaternion(cameratransform.rotation.x+90,cameratransform.rotation.y,cameratransform.rotation.z, cameratransform.rotation.w);
+        //TODO : correct the problem with onClick because the GameObject goes really far
 
         return obj;
+    }
+
+    public static void createMetaDataFile(string objPath)
+    {
+        //Create at runtime ".meta" files for each PNG and JPG
+        string directoryFolder = Path.GetDirectoryName(objPath);
+
+        //Only PNG and JPG files are done for know, more can easly be added if necessary
+        IEnumerable<string> files = Directory.EnumerateFiles(directoryFolder, "*.*", SearchOption.AllDirectories)
+            .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            .Where(file => !file.EndsWith(".obj", StringComparison.OrdinalIgnoreCase) && !file.EndsWith(".mtl", StringComparison.OrdinalIgnoreCase));
+
+        //Create a meta file foreach png or jpg files
+        foreach (string file in files)
+        {
+            Debug.Log("nom du fichier " + file);
+
+            //Create a new meta file
+            #if UNITY_EDITOR
+                string ExamplePath = "/Resources/EXAMPLE.txt";
+            #else
+                string ExamplePath = "/Assets/Resources/EXAMPLE.txt";
+            #endif
+
+            Debug.Log("EXAMPLE file " + Application.dataPath + ExamplePath);
+            string contentMeta = File.ReadAllText(Application.dataPath + ExamplePath);
+
+            string exportNameMeta = file + ".meta";
+            Debug.Log("exportNameMeta Meta " + exportNameMeta);
+
+            System.IO.File.WriteAllText(exportNameMeta, contentMeta);
+        }
     }
 }

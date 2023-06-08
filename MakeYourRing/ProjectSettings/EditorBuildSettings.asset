@@ -12,5 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainScene.unity
     guid: a0bd0132df8a67f4c935549bca2741e7
   m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 7f83082e06c0aff44943680ff17362d4, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: ed17ba1563dd0484fbc84eec162edd35, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 92fef82cb564ba64288d65c89c66f133, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: bca96f1c11f1eb041bfeb94615c55b51, type: 2}
