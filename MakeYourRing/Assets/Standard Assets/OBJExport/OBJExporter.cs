@@ -21,14 +21,14 @@ using UnityEditor;
 
 public class OBJExporter
 {
-    public bool onlySelectedObjects = false;
+   // public bool onlySelectedObjects = false;
     public bool applyPosition = true;
     public bool applyRotation = true;
     public bool applyScale = true;
     public bool generateMaterials = true;
     public bool exportTextures = true;
     public bool splitObjects = true;
-    public bool autoMarkTexReadable = false;
+    //public bool autoMarkTexReadable = false;
     public bool objNameAddIdNum = false;
 
     //public bool materialsUseTextureName = false;
@@ -172,8 +172,6 @@ public class OBJExporter
             int lastIndex = 0;
             for (int i = 0; i < sceneMeshes.Length; i++)
             {
-                Debug.Log("ALL MESHES " + sceneMeshes);
-
                 string meshName = sceneMeshes[i].gameObject.name;
                 float progress = (float)(i + 1) / maxExportProgress;
                 Debug.Log("Exporting object " + meshName);

@@ -294,6 +294,26 @@ namespace Dummiesman
                 builtObj.transform.SetParent(obj.transform, false);
             }
 
+            MeshRenderer[] meshes = obj.GetComponentsInChildren<MeshRenderer>();
+            foreach(var mesh in meshes)
+            {
+                Material modifiedMaterial = new Material(mesh.material);
+                mesh.material = null;
+                modifiedMaterial.SetFloat("_Mode", 0f);
+                modifiedMaterial.EnableKeyword("_ALPHATEST_ON");
+                modifiedMaterial.renderQueue = -1;
+                mesh.material = modifiedMaterial;
+                
+                // Set the properties of the modified material
+                //modifiedMaterial.CopyPropertiesFromMaterial(mesh.material);
+
+                // Set the rendering mode to Opaque
+                //modifiedMaterial.ComputeCRC();
+                //mesh.material = modifiedMaterial;
+
+
+                Debug.Log("mesh" + mesh);
+            }
             return obj;
         }
 

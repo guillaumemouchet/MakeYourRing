@@ -3,11 +3,9 @@ using UnityEngine;
 using Dummiesman;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Input;
-using TMPro;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
+
+using Microsoft.MixedReality.Toolkit.Utilities;
+using UnityEngine.XR;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -119,22 +117,14 @@ public class SettingsMenu : MonoBehaviour
 
             string localPath = "\\" + obj.name + ".obj";
 
-            OBJExporter objExporter = new OBJExporter();
+            GameObjectExporterToObj gameObjectExporterToObj = new GameObjectExporterToObj();
+            gameObjectExporterToObj.Export(obj, folderPath+ localPath); 
+           //OBJExporter objExporter = new OBJExporter();
 
             //Save the object at the right place to use it easly after
-            objExporter.Export(folderPath + localPath, obj); //C# function in objexporter
-            Debug.Log(folderPath + localPath);
+            //objExporter.Export(folderPath + localPath, obj); //C# function in objexporter
 
-
-            //DEBUG TEST
-            //Destroy(obj);
-
-            ////Reimport all after normalisation of the export
-            //Utility.createMetaDataFile(folderPath + localPath);
-
-            //GameObject new_obj = objLoader.Load(folderPath + localPath);
-
-            //Utility.addImportantComponent(new_obj);
+            Debug.Log("out of Export " + folderPath + localPath);
 
         }
         
@@ -144,8 +134,18 @@ public class SettingsMenu : MonoBehaviour
     public void OnDisplayClick()
         {
             Debug.Log("onDisplayClick");
+            HandJointUtils.TryGetJointPose(TrackedHandJoint.RingMiddleJoint, Handedness.Right, out MixedRealityPose pose);
 
-        }
+        GameObject tryObject = GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem;
+            GameObject righthand = GameObject.Find("R_Hand"); //Doest stay in the scene all along
+
+        tryObject.transform.localPosition = pose.Position;
+
+        tryObject.transform.rotation = pose.Rotation;
+        tryObject.transform.SetParent(righthand.transform);
+
+
+    }
 
     /// <summary>
     /// This method add quick button for debug purpous

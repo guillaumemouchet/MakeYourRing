@@ -6386,6 +6386,14 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 645975356083136176, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 645975356083136176, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 645975356083136176, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.4402
       objectReference: {fileID: 0}
@@ -6428,6 +6436,10 @@ PrefabInstance:
     - target: {fileID: 645975356083136177, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: m_Name
       value: InventoryMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 645975356083136177, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 645975356266253446, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6929,6 +6941,14 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7121081727263079908, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121081727263079908, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121081727263079908, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.2966
       objectReference: {fileID: 0}
@@ -6971,6 +6991,10 @@ PrefabInstance:
     - target: {fileID: 7121081727263079911, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
       propertyPath: m_Name
       value: HandMenu_MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121081727263079911, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7121081728719287608, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
       propertyPath: m_fontSize
@@ -7308,7 +7332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d9acc7968244a8886f3af591305bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeProfile: {fileID: 11400000, guid: 31a611a779d3499e8e35f1a2018ca841, type: 2}
+  activeProfile: {fileID: 11400000, guid: e3e010da8670a8d4ca0f6bdc913ffa12, type: 2}
 --- !u!4 &1667829885
 Transform:
   m_ObjectHideFlags: 0
@@ -7435,6 +7459,10 @@ PrefabInstance:
     - target: {fileID: 4746736132473781158, guid: bf459b5045759f742a1ea9dbefff9477, type: 3}
       propertyPath: m_Name
       value: Inventory Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4746736132473781158, guid: bf459b5045759f742a1ea9dbefff9477, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf459b5045759f742a1ea9dbefff9477, type: 3}
@@ -15915,18 +15943,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 782347718}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: OnDeleteClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   Events:
   - Event:
       m_PersistentCalls:
@@ -16720,7 +16736,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45127824549143381}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4675, y: -0.16649999, z: 1}
+  m_LocalPosition: {x: -0.4675, y: -0.1717, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 45127823657972605}

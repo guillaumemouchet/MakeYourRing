@@ -26,7 +26,6 @@ public class Utility : MonoBehaviour
         string localPath = "";
         switch (type)
         {
-
             case jewelType.Ring:
                 {
                     #if UNITY_EDITOR
@@ -46,8 +45,6 @@ public class Utility : MonoBehaviour
                     #endif
                 }
                 break;
-
-
         }
 
         var globalPath = Application.dataPath + localPath;
@@ -196,8 +193,16 @@ public class Utility : MonoBehaviour
         Transform objTransform = obj.GetComponent<Transform>();
         for (int j = 0; j < objTransform.childCount; j++)
         {
-            objTransform.GetChild(j).transform.localScale = new Vector3(objTransform.GetChild(j).transform.localScale.x * -1, objTransform.GetChild(j).transform.localScale.y, objTransform.GetChild(j).transform.localScale.z);
+            Transform childTransform = objTransform.GetChild(j).transform;
+            childTransform.localScale = new Vector3(childTransform.localScale.x * -1, childTransform.localScale.y, childTransform.localScale.z);
         }
+
+        Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+
+        Debug.Log("cameratransform.up " + cameratransform.up);
+        objTransform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) - cameratransform.forward + cameratransform.up* 0.5f;
+        objTransform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+
     }
 
 
@@ -262,10 +267,9 @@ public class Utility : MonoBehaviour
         }
 
         ////Place the object in front of the player
-        Transform cameratransform = GameObject.Find("UIRaycastCamera").transform;
-        obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward; 
-        obj.transform.rotation = new Quaternion(cameratransform.rotation.x+90,cameratransform.rotation.y,cameratransform.rotation.z, cameratransform.rotation.w);
-        //TODO : correct the problem with onClick because the GameObject goes really far
+        Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward + cameratransform.up * 0.5f;
+        obj.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
 
         return obj;
     }
