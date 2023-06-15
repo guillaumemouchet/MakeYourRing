@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR;
 using Microsoft.MixedReality.OpenXR.Remoting;
+using System.Net;
 
 /*
  * This code is inspired and used from this tutorial from microsoft : https://learn.microsoft.com/en-us/training/modules/pc-holographic-remoting-tutorials/1-introduction
@@ -47,6 +48,7 @@ public class HolographicRemoteConnect : MonoBehaviour
          * Changing the Remoting doesn't change the FPS
          * 
          **/
+
         AppRemoting.StartConnectingToPlayer(remotingConfiguration_1); //TODO change the type of connexion
 
     }

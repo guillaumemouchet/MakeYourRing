@@ -134,6 +134,7 @@ public class MergeJewel : MonoBehaviour
             if (go.tag.Equals("jewel") || go.tag.Equals("leader"))
             {
                 Debug.Log("Ignore collision" + go.name);
+                Debug.Log("Ignore collision" + this.name);
                 Physics.IgnoreCollision(this.GetComponent<Collider>(), go.GetComponent<Collider>(), true);
             }
         }
@@ -154,6 +155,8 @@ public class MergeJewel : MonoBehaviour
             if (go.tag.Equals("jewel") || go.tag.Equals("leader"))
             {
                 Debug.Log("Restore collision" + go.name);
+                Debug.Log("Restore collision" + this.name);
+
                 Physics.IgnoreCollision(this.GetComponent<Collider>(), go.GetComponent<Collider>(), false);
             }
         }

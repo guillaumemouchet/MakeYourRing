@@ -191,17 +191,18 @@ public class Utility : MonoBehaviour
         //This isn't the best solution -> TODO : find better solution
         //But when an saved .obj is reloaded it's text is reversed so need to do a small correction
         Transform objTransform = obj.GetComponent<Transform>();
+        objTransform.localScale = new Vector3(objTransform.localScale.x * -1, objTransform.localScale.y, objTransform.localScale.z);
         for (int j = 0; j < objTransform.childCount; j++)
         {
             Transform childTransform = objTransform.GetChild(j).transform;
             childTransform.localScale = new Vector3(childTransform.localScale.x * -1, childTransform.localScale.y, childTransform.localScale.z);
         }
 
-        Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-
-        Debug.Log("cameratransform.up " + cameratransform.up);
-        objTransform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) - cameratransform.forward + cameratransform.up* 0.5f;
-        objTransform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+        //Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        //CHange position of GameObject to be in front of the player
+        //Debug.Log("cameratransform.up " + cameratransform.up);
+        //objTransform.localPosition = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward + cameratransform.up * 0.02f;
+        //objTransform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
 
     }
 
@@ -268,7 +269,7 @@ public class Utility : MonoBehaviour
 
         ////Place the object in front of the player
         Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward + cameratransform.up * 0.5f;
+        obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.2f;
         obj.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
 
         return obj;

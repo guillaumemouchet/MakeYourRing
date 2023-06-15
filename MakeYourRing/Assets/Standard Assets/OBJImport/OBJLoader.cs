@@ -298,20 +298,19 @@ namespace Dummiesman
             foreach(var mesh in meshes)
             {
                 Material modifiedMaterial = new Material(mesh.material);
-                mesh.material = null;
+                Shader modifiedShader = (Shader.Find("Standard (Specular setup)"));
+
+                //mesh.material = null;
+
+                //Change the mode to Opaque
                 modifiedMaterial.SetFloat("_Mode", 0f);
                 modifiedMaterial.EnableKeyword("_ALPHATEST_ON");
+                //modifiedMaterial.shader = null;
+                modifiedMaterial.shader = modifiedShader;
+
                 modifiedMaterial.renderQueue = -1;
                 mesh.material = modifiedMaterial;
                 
-                // Set the properties of the modified material
-                //modifiedMaterial.CopyPropertiesFromMaterial(mesh.material);
-
-                // Set the rendering mode to Opaque
-                //modifiedMaterial.ComputeCRC();
-                //mesh.material = modifiedMaterial;
-
-
                 Debug.Log("mesh" + mesh);
             }
             return obj;

@@ -1,20 +1,20 @@
-newmtl Background
+newmtl Background (Instance)
 Kd 0.005333 0.005333 0.005333
-Tr 1.0
+Tr 0.0
 d 1.0
 Ks 0.366972 0.366972 0.366972
 illum 2
 
-newmtl White_Gold
+newmtl White_Gold (Instance)
 Kd 0.8 0.8 0.8
-Tr 1.0
+Tr 0.0
 d 1.0
 Ks 1 1 1
 illum 2
 
-newmtl Diamond
+newmtl Diamond (Instance)
 Kd 0.8 0.8 0.8
-Tr 1.0
+Tr 0.0
 d 1.0
 Ks 0.5 0.5 0.5
 illum 2
