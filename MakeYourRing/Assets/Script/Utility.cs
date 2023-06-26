@@ -2,11 +2,17 @@ using Dummiesman;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+
+/*=============================================================================
+ |	    Project:  MakeYourRing Travail de Bachelor
+ |
+ |       Author:  Guillaume Mouchet - ISC3il-b
+ |
+ *===========================================================================*/
 
 public class Utility : MonoBehaviour
 {
@@ -18,7 +24,7 @@ public class Utility : MonoBehaviour
     }
 
     /// <summary>
-    /// Create the path with the path of where are stored or item
+    /// Create the global path with the local path of where are stored the assets
     /// </summary>
     /// <param name="type">Type of our item, will change the paths</param>
     private static string chooseEnablePath(jewelType type)
@@ -28,21 +34,21 @@ public class Utility : MonoBehaviour
         {
             case jewelType.Ring:
                 {
-                    #if UNITY_EDITOR
-                        localPath = "/Resources/Ring/";
-                    #else
+#if UNITY_EDITOR
+                    localPath = "/Resources/Ring/";
+#else
                         localPath = "/Assets/Resources/Ring/";
-                    #endif
+#endif
                 }
                 break;
 
             case jewelType.Bracelet:
                 {
-                    #if UNITY_EDITOR
-                        localPath = "/Resources/Bracelet/";
-                    #else
+#if UNITY_EDITOR
+                    localPath = "/Resources/Bracelet/";
+#else
                         localPath = "/Assets/Resources/Bracelet/";
-                    #endif
+#endif
                 }
                 break;
         }
@@ -53,7 +59,7 @@ public class Utility : MonoBehaviour
     }
 
     /// <summary>
-    /// Create the path to create a certain item at index i
+    /// Create the path to load the asset at index i
     /// </summary>
     /// <param name="i">index in the list of the file</param>
     /// <param name="objFileList">List of all the .obj path</param>
@@ -66,21 +72,21 @@ public class Utility : MonoBehaviour
 
             case jewelType.Ring:
                 {
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                     localPath = "/Resources/Ring/" + objFileList[i] + ".obj";
-                #else
+#else
                     localPath = "/Assets/Resources/Ring/" + objFileList[i] + ".obj";
-                #endif
+#endif
                 }
                 break;
 
-                case jewelType.Bracelet:
+            case jewelType.Bracelet:
                 {
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                     localPath = "/Resources/Bracelet/" + objFileList[i] + ".obj";
-                #else
+#else
                     localPath = "/Assets/Resources/Bracelet/" + objFileList[i] + ".obj";
-                #endif
+#endif
                 }
                 break;
 
@@ -109,7 +115,7 @@ public class Utility : MonoBehaviour
     }
 
     /// <summary>
-    /// Create a dynamic button for each found .obj in our folder
+    /// Create a dynamic button for each found .obj in our folder up to nine by page, or else pagination is made
     /// </summary>
     /// <param name="objFileList">List of all the .obj path</param>
     /// <param name="prefabButton">The button to copy, to have already some components</param>
@@ -125,7 +131,7 @@ public class Utility : MonoBehaviour
         //Get all files with .obj
         var info = new DirectoryInfo(globalPath);
         var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
-        int count = Math.Min(nbElementPerPage, fileInfo.Count-nbElementPerPage*(currentPage-1));
+        int count = Math.Min(nbElementPerPage, fileInfo.Count - nbElementPerPage * (currentPage - 1));
 
         var subList = fileInfo.GetRange((currentPage - 1) * nbElementPerPage, count); //Create a sublist of the element we want to display
 
@@ -134,10 +140,8 @@ public class Utility : MonoBehaviour
         foreach (FileInfo obj in subList)
         {
             string name = Path.GetFileNameWithoutExtension(obj.Name);
-            
-            //Debug.Log("onEnable " + name);
 
-            objFileList.Add(name); //To use them later
+            objFileList.Add(name);
 
             //wrap back after 3 elements
             if (i % 3 == 0 && i != 0)
@@ -157,11 +161,8 @@ public class Utility : MonoBehaviour
 
             buttonList.Add(new_btn_prefab); //Used to destroy them later
 
-
-            //Debug.Log("Add Listener on " + i);
-
             //Create a listener to have an action linked to the right file
-            int tempI = i+ (currentPage - 1) * nbElementPerPage;
+            int tempI = i + (currentPage - 1) * nbElementPerPage;
             jewelType tempType = type;
             new_btn_prefab.GetComponent<ButtonConfigHelper>().OnClick.AddListener(delegate { onItemClick(tempI, objFileList, tempType); }); // change to temp value to not have the reference but the value only
             i++;
@@ -188,7 +189,7 @@ public class Utility : MonoBehaviour
 
         obj = addImportantComponent(obj);
 
-        //This isn't the best solution -> TODO : find better solution
+        //This isn't the best solution
         //But when an saved .obj is reloaded it's text is reversed so need to do a small correction
         Transform objTransform = obj.GetComponent<Transform>();
         objTransform.localScale = new Vector3(objTransform.localScale.x * -1, objTransform.localScale.y, objTransform.localScale.z);
@@ -197,12 +198,6 @@ public class Utility : MonoBehaviour
             Transform childTransform = objTransform.GetChild(j).transform;
             childTransform.localScale = new Vector3(childTransform.localScale.x * -1, childTransform.localScale.y, childTransform.localScale.z);
         }
-
-        //Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        //CHange position of GameObject to be in front of the player
-        //Debug.Log("cameratransform.up " + cameratransform.up);
-        //objTransform.localPosition = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward + cameratransform.up * 0.02f;
-        //objTransform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
 
     }
 
@@ -217,8 +212,9 @@ public class Utility : MonoBehaviour
         obj.AddComponent<MergeJewel>();
         obj.AddComponent<Rigidbody>();
         obj.tag = "jewel";
+        obj.layer = LayerMask.NameToLayer("Jewel");
         obj.AddComponent<MeshCollider>();
-        obj.GetComponent<MeshCollider>().convex = true; //Neceserry for something don't remember what
+        obj.GetComponent<MeshCollider>().convex = true;
 
 
         //Need to combine the collider with the children of the object to have only one of the good size and not multiple
@@ -251,7 +247,7 @@ public class Utility : MonoBehaviour
         obj.GetComponent<Rigidbody>().useGravity = true;
         obj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
-        //Those component are those to move and interact with an Object
+        //Those componenta are those to move and interact with an Object
         obj.AddComponent<ConstraintManager>();
         obj.AddComponent<ObjectManipulator>();
         obj.AddComponent<NearInteractionGrabbable>();
@@ -275,6 +271,11 @@ public class Utility : MonoBehaviour
         return obj;
     }
 
+
+    /// <summary>
+    /// Create a Meta file with Readable at true for each PNG and JPG in the folder
+    /// </summary>
+    /// <param name="objPath">Folder where our object is</param>
     public static void createMetaDataFile(string objPath)
     {
         //Create at runtime ".meta" files for each PNG and JPG
@@ -288,14 +289,12 @@ public class Utility : MonoBehaviour
         //Create a meta file foreach png or jpg files
         foreach (string file in files)
         {
-            Debug.Log("nom du fichier " + file);
-
             //Create a new meta file
-            #if UNITY_EDITOR
-                string ExamplePath = "/Resources/EXAMPLE.txt";
-            #else
+#if UNITY_EDITOR
+            string ExamplePath = "/Resources/EXAMPLE.txt";
+#else
                 string ExamplePath = "/Assets/Resources/EXAMPLE.txt";
-            #endif
+#endif
 
             Debug.Log("EXAMPLE file " + Application.dataPath + ExamplePath);
             string contentMeta = File.ReadAllText(Application.dataPath + ExamplePath);

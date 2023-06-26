@@ -1,5 +1,12 @@
 using UnityEngine;
 
+/*=============================================================================
+ |	    Project:  MakeYourRing Travail de Bachelor
+ |
+ |       Author:  Guillaume Mouchet - ISC3il-b
+ |
+ *===========================================================================*/
+
 /** This is the credits for all used icons from flaticon in agreament with their license
  * Inventory icon : designed by Yogi Aprelliyanto from Flaticon (https://www.flaticon.com/free-icon/box_9853880)
  * Delete icon : designed by Kiranshastry from Flaticon (https://www.flaticon.com/free-icon/delete_1214428)

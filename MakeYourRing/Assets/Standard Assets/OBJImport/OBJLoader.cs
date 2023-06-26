@@ -48,27 +48,27 @@ namespace Dummiesman
         //file info for files loaded from file path, used for GameObject naming and MTL finding
         private FileInfo _objInfo;
 
-//#if UNITY_EDITOR
-//        [MenuItem("GameObject/Import From OBJ")]
-//        static void ObjLoadMenu()
-//        {
-//            string pth = EditorUtility.OpenFilePanel("Import OBJ", "", "obj");
-//            if (!string.IsNullOrEmpty(pth))
-//            {
-//                System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-//                s.Start();
+        //#if UNITY_EDITOR
+        //        [MenuItem("GameObject/Import From OBJ")]
+        //        static void ObjLoadMenu()
+        //        {
+        //            string pth = EditorUtility.OpenFilePanel("Import OBJ", "", "obj");
+        //            if (!string.IsNullOrEmpty(pth))
+        //            {
+        //                System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+        //                s.Start();
 
-//                var loader = new OBJLoader
-//                {
-//                    SplitMode = SplitMode.Object,
-//                };
-//                loader.Load(pth, null);
+        //                var loader = new OBJLoader
+        //                {
+        //                    SplitMode = SplitMode.Object,
+        //                };
+        //                loader.Load(pth, null);
 
-//                Debug.Log($"OBJ import time: {s.ElapsedMilliseconds}ms");
-//                s.Stop();
-//            }
-//        }
-//#endif
+        //                Debug.Log($"OBJ import time: {s.ElapsedMilliseconds}ms");
+        //                s.Stop();
+        //            }
+        //        }
+        //#endif
 
         /// <summary>
         /// Helper function to load mtllib statements
@@ -132,7 +132,7 @@ namespace Dummiesman
 
             //do the reading
             while (!buffer.endReached)
-            { 
+            {
 
                 buffer.SkipWhitespaces();
 
@@ -295,7 +295,7 @@ namespace Dummiesman
             }
 
             MeshRenderer[] meshes = obj.GetComponentsInChildren<MeshRenderer>();
-            foreach(var mesh in meshes)
+            foreach (var mesh in meshes)
             {
                 Material modifiedMaterial = new Material(mesh.material);
                 Shader modifiedShader = (Shader.Find("Standard (Specular setup)"));
@@ -310,7 +310,7 @@ namespace Dummiesman
 
                 modifiedMaterial.renderQueue = -1;
                 mesh.material = modifiedMaterial;
-                
+
                 Debug.Log("mesh" + mesh);
             }
             return obj;
@@ -330,7 +330,7 @@ namespace Dummiesman
             return Load(input);
         }
 
-        
+
 
         /// <summary>
         /// Load an OBJ and MTL file from a file path.

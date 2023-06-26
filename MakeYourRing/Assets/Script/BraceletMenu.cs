@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+/*=============================================================================
+ |	    Project:  MakeYourRing Travail de Bachelor
+ |
+ |       Author:  Guillaume Mouchet - ISC3il-b
+ |
+ *===========================================================================*/
 
 public class BraceletMenu : MonoBehaviour
 {
@@ -28,7 +34,7 @@ public class BraceletMenu : MonoBehaviour
 
     public int numberOfPages;
     public int currentPage = 1;
-     
+
     private double nbElementPerPages = 9.0;
 
     void OnDisable()
@@ -104,15 +110,15 @@ public class BraceletMenu : MonoBehaviour
     /// On the close of the panel we want to destroy the button and create new one each time
     /// </summary>
     public void onCloseClick()
+    {
+        foreach (GameObject btn in buttonList)
         {
-            foreach (GameObject btn in buttonList)
-            {
             Debug.Log("Destroy button");
             Destroy(btn);
-            }
-            braceletMenu.SetActive(false);
-
         }
+        braceletMenu.SetActive(false);
+
+    }
 
     /// <summary>
     /// Import the selected item at index i
@@ -122,11 +128,11 @@ public class BraceletMenu : MonoBehaviour
     {
         Debug.Log("On itemClick" + i);
 
-        #if UNITY_EDITOR
-            string localPath = "/Resources/Bracelet/" + objFileList[i] + ".obj";
-        #else
+#if UNITY_EDITOR
+        string localPath = "/Resources/Bracelet/" + objFileList[i] + ".obj";
+#else
             string localPath = "/Assets/Resources/Bracelet/" + objFileList[i] + ".obj";
-        #endif
+#endif
         var globalPath = Application.dataPath + localPath;
 
         Debug.Log(globalPath);

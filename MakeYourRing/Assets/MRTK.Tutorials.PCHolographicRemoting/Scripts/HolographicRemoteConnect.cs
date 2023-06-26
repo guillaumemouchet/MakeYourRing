@@ -3,10 +3,13 @@ using UnityEngine.XR;
 using Microsoft.MixedReality.OpenXR.Remoting;
 using System.Net;
 
-/*
- * This code is inspired and used from this tutorial from microsoft : https://learn.microsoft.com/en-us/training/modules/pc-holographic-remoting-tutorials/1-introduction
- * This still have problems with the FPS, may be a problem with my potato computer
- */
+
+/*=============================================================================
+ |	    Project:  MakeYourRing Travail de Bachelor
+ |
+ |      Author:  Guillaume Mouchet - ISC3il-b
+ |      Notes: This code is inspired and used from this tutorial by Microsoft https://learn.microsoft.com/en-us/training/modules/pc-holographic-remoting-tutorials/1-introduction
+ *===========================================================================*/
 
 /**
  * Some test where made to see if multiplayer was possible so with 2 Hololens 2
@@ -26,16 +29,19 @@ public class HolographicRemoteConnect : MonoBehaviour
     private bool connected = false;
 
     [SerializeField, Tooltip("The configuration information for the remote connection.")]
+
     // Parameters where given in the example, changing them doens't help with the fps
     //private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 2000, VideoCodec = RemotingVideoCodec.H264, EnableAudio = false};
-    private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 20000, VideoCodec = RemotingVideoCodec.H265, EnableAudio = false };
+
 
     /**
-     * 
-     * Changing the codex doesn't change the FPS
-     * Changing the MaxBitrate doestn't change the FPS
-     * */
+    * 
+    * Changing the codex doesn't change the FPS
+    * Changing the MaxBitrate doestn't change the FPS
+    * */
+    private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 20000, VideoCodec = RemotingVideoCodec.H265, EnableAudio = false };
 
+   
     /// <summary>
     /// Connect the application to the hololens using AppRemoting
     /// </summary>
@@ -46,10 +52,8 @@ public class HolographicRemoteConnect : MonoBehaviour
 
         /**
          * Changing the Remoting doesn't change the FPS
-         * 
          **/
-
-        AppRemoting.StartConnectingToPlayer(remotingConfiguration_1); //TODO change the type of connexion
+        AppRemoting.StartConnectingToPlayer(remotingConfiguration_1);
 
     }
 

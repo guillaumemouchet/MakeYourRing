@@ -21,7 +21,7 @@ using UnityEditor;
 
 public class OBJExporter
 {
-   // public bool onlySelectedObjects = false;
+    // public bool onlySelectedObjects = false;
     public bool applyPosition = true;
     public bool applyRotation = true;
     public bool applyScale = true;
@@ -282,7 +282,7 @@ public class OBJExporter
                 lastIndex += msh.vertices.Length;
             }
 
-            
+
             // To be sure to not delete another file with the same name
             int k = 0;
             while (File.Exists(exportPath))
@@ -321,7 +321,7 @@ public class OBJExporter
             Debug.Log("Erreur dans le Export"); //Need to change the jpg to readable in unity, may be a problem
         }
     }
-    
+
     string TryExportTexture(string propertyName, Material m)
     {
         if (m.HasProperty(propertyName))
@@ -334,7 +334,7 @@ public class OBJExporter
         }
         return "false";
     }
-    
+
     string ExportTexture(Texture2D t)
     {
         try
@@ -362,16 +362,16 @@ public class OBJExporter
             #endif  */
             string exportName = lastExportFolder + "\\" + t.name + ".jpg";
 
-            
+
             int k = 0;
-            
+
             do
             {
                 k++;
                 Debug.Log("exist JPG");
-                exportName = lastExportFolder + "\\" + t.name + k + ".jpg"; 
+                exportName = lastExportFolder + "\\" + t.name + k + ".jpg";
                 Debug.Log(exportName);
-                
+
             } while (File.Exists(exportName));
 
             Texture2D exTexture = new Texture2D(t.width, t.height, TextureFormat.ARGB32, false);
@@ -380,13 +380,13 @@ public class OBJExporter
             System.IO.File.WriteAllBytes(exportName, exTexture.EncodeToJPG(95));
 
             //Create a new meta file
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
 
-                        string localPath = "/Resources/EXAMPLE.txt";
-            #else
+            string localPath = "/Resources/EXAMPLE.txt";
+#else
                         string localPath = "/Assets/Resources/EXAMPLE.txt";
 
-            #endif
+#endif
             Debug.Log("EXMAPLE file " + Application.dataPath + localPath);
             string contentMeta = File.ReadAllText(Application.dataPath + localPath);
             Debug.Log("content Meta " + contentMeta);
@@ -396,7 +396,7 @@ public class OBJExporter
 
             System.IO.File.WriteAllText(exportNameMeta, contentMeta);
 
-            return t.name + k +".jpg";
+            return t.name + k + ".jpg";
         }
         catch (System.Exception ex)
         {

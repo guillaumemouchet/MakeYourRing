@@ -1,11 +1,14 @@
 using Dummiesman;
-using Microsoft.MixedReality.Toolkit.UI;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 
+/*=============================================================================
+ |	    Project:  MakeYourRing Travail de Bachelor
+ |
+ |       Author:  Guillaume Mouchet - ISC3il-b
+ |
+ *===========================================================================*/
 
 public class RingMenu : MonoBehaviour
 {
@@ -52,7 +55,7 @@ public class RingMenu : MonoBehaviour
         Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring, currentPage);
         btnBack.SetActive(false);
 
-        btnFront.SetActive(numberOfPages>1);
+        btnFront.SetActive(numberOfPages > 1);
     }
 
 
@@ -124,11 +127,11 @@ public class RingMenu : MonoBehaviour
     {
         Debug.Log("On itemClick" + i);
 
-        #if UNITY_EDITOR
-                string localPath = "/Resources/Ring/" + objFileList[i] + ".obj";
-        #else
+#if UNITY_EDITOR
+        string localPath = "/Resources/Ring/" + objFileList[i] + ".obj";
+#else
                 string localPath = "/Assets/Resources/Ring/" + objFileList[i] + ".obj";
-        #endif
+#endif
         var globalPath = Application.dataPath + localPath;
 
         Debug.Log(globalPath);

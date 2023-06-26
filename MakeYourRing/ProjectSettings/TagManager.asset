@@ -8,6 +8,7 @@ TagManager:
   - leader
   - handMenu
   - settingsMenu
+  - hand
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Jewel
   - 
   - 
   - 
