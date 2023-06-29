@@ -1,4 +1,5 @@
 using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ using UnityEngine.UIElements;
 
 public class MergeJewel : MonoBehaviour
 {
+    private GameObject instance;
+    private GameObject follower = null;
     public GameObject leader = null;
 
     private bool keepWordPosition = true;
@@ -43,6 +46,19 @@ public class MergeJewel : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
+
+        //TODO
+        if (this.CompareTag("leader") && follower==null)
+        {
+            follower = Instantiate(instance, this.transform,false);
+
+            follower.GetComponent<DirectionalIndicatorModified>().DirectionalTarget = this.transform;
+        }else if(this.CompareTag("jewel"))
+        {
+            Destroy(follower);
+            follower = null;
+        }
+
         List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius, LayerMask.GetMask("Jewel")).ToList<Collider>();//, LayerMask.NameToLayer("Jewel"));
         //Skip the current gameObject
         ObjectInRange.Remove(ObjectInRange.SingleOrDefault(r => r.gameObject == this.gameObject));
@@ -108,9 +124,14 @@ public class MergeJewel : MonoBehaviour
                 this.tag = totalThis > 0 ? "leader" : "jewel";
 
                 this.leader.tag = totalLeader > 0 ? "leader" : "jewel";
-
+                
                 //finish the separation
                 this.leader = null;
+
+
+
+                
+
             }
 
 
@@ -133,6 +154,7 @@ public class MergeJewel : MonoBehaviour
     /// </summary>
     void Start()
     {
+        instance = GameObject.Find("Leader_Follower");
         //Create a listener to know what is the last selected item
         var pointerHandler = this.gameObject.AddComponent<PointerHandler>();
 
@@ -322,6 +344,9 @@ public class MergeJewel : MonoBehaviour
                 return;
             }
         }
+
+
+        
 
     }
 
