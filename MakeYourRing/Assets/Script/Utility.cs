@@ -214,7 +214,7 @@ public class Utility : MonoBehaviour
         obj.tag = "jewel";
         obj.layer = LayerMask.NameToLayer("Jewel");
         obj.AddComponent<MeshCollider>();
-        obj.GetComponent<MeshCollider>().convex = true;
+        obj.GetComponent<MeshCollider>().convex = false;
 
 
         //Need to combine the collider with the children of the object to have only one of the good size and not multiple
@@ -227,9 +227,10 @@ public class Utility : MonoBehaviour
             combine[i].mesh = meshFilters[i].sharedMesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
             meshFilters[i].gameObject.SetActive(false);
-
+            
             i++;
         }
+        Array.Clear(meshFilters, 0, meshFilters.Length);
         Mesh mesh = new Mesh();
         mesh.CombineMeshes(combine);
         //Resize the collider
@@ -254,11 +255,11 @@ public class Utility : MonoBehaviour
 
         //Change the size to not be bigger than 0.5 in the relative world size
         Vector3 size = obj.GetComponent<MeshCollider>().bounds.size;
-        if (Math.Abs(size.x) > 0.5f)
+        if (Math.Abs(size.x) > 0.3f)
         {
             Debug.Log("size en x " + size.x);
 
-            float ratio = (size.x) / 0.5f;
+            float ratio = (size.x) / 0.3f;
             Debug.Log("ratio " + ratio);
             obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio);
         }
@@ -267,6 +268,9 @@ public class Utility : MonoBehaviour
         Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
         obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.2f;
         obj.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+
+
+        obj.GetComponent<MeshCollider>().convex = false;
 
         return obj;
     }

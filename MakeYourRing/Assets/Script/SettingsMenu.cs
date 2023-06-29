@@ -4,6 +4,8 @@ using Dummiesman;
 using System;
 using Unity.XR.CoreUtils;
 using UnityEngine.UI;
+using System.IO;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -30,7 +32,7 @@ using Windows.Storage;
 public class SettingsMenu : MonoBehaviour
 {
 
-    [SerializeField]
+    [SerializeField] 
     private GameObject settingsMenu;
 
     [SerializeField]
@@ -42,7 +44,6 @@ public class SettingsMenu : MonoBehaviour
     public void OnCloseClick()
     {
         settingsMenu.SetActive(false);
-
     }
 
     /// <summary>
@@ -74,9 +75,12 @@ public class SettingsMenu : MonoBehaviour
 
         //Add a positive of negative confirmation message if a leader was found
         confirmationMessage.SetActive(true);
+
+        //Set the instructions in front of the player
         Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
         confirmationMessage.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.4f - cameratransform.up * 0.1f;
         confirmationMessage.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+
         if (saved)
         {
             confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Saved GameObjects";
@@ -104,7 +108,7 @@ public class SettingsMenu : MonoBehaviour
              new ExtensionFilter("Object file", "obj"),
          };
 #if UNITY_EDITOR
-        string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object", Application.dataPath + "/Assets", extensions, true);
+        string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object smaller than 10 000 ko", Application.dataPath + "/Assets", extensions, true);
 #else
             string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object", Application.dataPath + "/Assets/Assets/", extensions, true);
 #endif
@@ -115,45 +119,59 @@ public class SettingsMenu : MonoBehaviour
         {
             objPath = objPaths[0];
 
-            OBJLoader objLoader = new OBJLoader();
 
-            Utility.createMetaDataFile(objPath);
+            FileInfo fi = new FileInfo(objPath);
 
-            //Load the new object and give him his Components
-            GameObject obj = objLoader.Load(objPath);
+            //TODO add error message
+            if (fi.Length <= 10000)
+            {
+                OBJLoader objLoader = new OBJLoader();
 
-            obj = Utility.addImportantComponent(obj);
+                Utility.createMetaDataFile(objPath);
+
+                //Load the new object and give him his Components
+                GameObject obj = objLoader.Load(objPath);
+
+                obj = Utility.addImportantComponent(obj);
 
 
-            //Choose if it's a bracelet or a ring
+                //Choose if it's a bracelet or a ring
 #if UNITY_EDITOR
-            string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Resources", true);
+                string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Resources", true);
 #else
                 string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Assets/Resources", true);
 #endif
 
-            string folderPath = "";
-            //To not make the programme crash if nothing is selected -> Default is Ring
-            if (folderPaths.Length > 0)
-            {
-                folderPath = folderPaths[0];
-            }
-            else
-            {
+                string folderPath = "";
+                //To not make the programme crash if nothing is selected -> Default is Ring
+                if (folderPaths.Length > 0)
+                {
+                    folderPath = folderPaths[0];
+                }
+                else
+                {
 #if UNITY_EDITOR
-                folderPath = Application.dataPath + "/Resources/Ring/";
+                    folderPath = Application.dataPath + "/Resources/Ring/";
 #else
                     folderPath = Application.dataPath + "/Assets/Resources/Ring/";
 #endif
+                }
+
+                string localPath = "\\" + obj.name + ".obj";
+
+                GameObjectExporterToObj gameObjectExporterToObj = new GameObjectExporterToObj();
+                gameObjectExporterToObj.Export(obj, folderPath + localPath);
+            }
+            else
+            {
+                Debug.Log("File is too big");
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.DisplayDialog("File too big", "File must be smaller than 10'000 ko", "ok");
+#endif //TODO : find similar action outisde of unity
+
             }
 
-            string localPath = "\\" + obj.name + ".obj";
-
-            GameObjectExporterToObj gameObjectExporterToObj = new GameObjectExporterToObj();
-            gameObjectExporterToObj.Export(obj, folderPath + localPath);
-
         }
-
     }
 
 
@@ -170,18 +188,18 @@ public class SettingsMenu : MonoBehaviour
         {
             GameObject tryObject = GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem;
             GameObject position = GameObject.Find("position");
-            tryObject.transform.localPosition = position.transform.position;
-            tryObject.transform.localRotation = Quaternion.identity;
 
-            tryObject.transform.SetParent(position.transform);
+            //Set the root item (leader) near the position of the finger
+            tryObject.transform.root.localPosition = position.transform.position;
+            tryObject.transform.root.localRotation = Quaternion.identity;
+
+            tryObject.transform.root.transform.SetParent(position.transform);
         }
         catch (Exception e)
         {
+            Debug.Log(e);
             return;
         }
-
-
-
 
     }
 

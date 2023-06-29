@@ -12,3 +12,7 @@ Created by whynotcg35 (https://www.turbosquid.com/Search/Artists/whynotcg35) and
 ### White_Gold_Ring.obj
 
 Created by Jewel CG Service (https://www.turbosquid.com/Search/Artists/Jewel-CG-Service) and can be found at the following link (https://www.turbosquid.com/3d-models/wedding-band-3ds-free/494563)
+
+### XXX_Chain_Ring_mega_X.obj
+
+Created by mega-3d (https://www.cgtrader.com/mega-3d) and can be found at the following link (https://www.cgtrader.com/free-3d-print-models/jewelry/rings/free-casual-ring-220916)

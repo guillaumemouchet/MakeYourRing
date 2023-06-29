@@ -17,7 +17,7 @@ public class BraceletMenu : MonoBehaviour
     private GameObject btnBack;
 
     [SerializeField]
-    private GameObject btnFront;
+    private GameObject btnForward;
 
     [SerializeField]
     private GameObject braceletMenu;
@@ -28,14 +28,14 @@ public class BraceletMenu : MonoBehaviour
     [SerializeField]
     private GameObject parent;
 
-    public List<string> objFileList = new List<string>();
+    private List<string> objFileList = new List<string>();
 
-    public List<GameObject> buttonList = new List<GameObject>();
+    private List<GameObject> buttonList = new List<GameObject>();
 
     public int numberOfPages;
-    public int currentPage = 1;
+    public int currentPage;
 
-    private double nbElementPerPages = 9.0;
+    private double maxNbElementPerPages = 9.0;
 
     void OnDisable()
     {
@@ -51,12 +51,12 @@ public class BraceletMenu : MonoBehaviour
     {
         currentPage = 1;
         //Pagination
-        numberOfPages = (int)Math.Ceiling(Utility.countNumberOfButton(Utility.jewelType.Bracelet) / nbElementPerPages);
+        numberOfPages = (int)Math.Ceiling(Utility.countNumberOfButton(Utility.jewelType.Bracelet) / maxNbElementPerPages);
 
         ////Create a button for each .obj in our resource folder
         Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
         btnBack.SetActive(false);
-        btnFront.SetActive(numberOfPages > 1);
+        btnForward.SetActive(numberOfPages > 1);
 
     }
 
@@ -67,20 +67,18 @@ public class BraceletMenu : MonoBehaviour
     /// </summary>
     public void onBackClick()
     {
-        Debug.Log("Back click");
 
         foreach (GameObject btn in buttonList)
         {
-            Debug.Log("Destroy button");
             Destroy(btn);
         }
         currentPage--;
-        //Display new
+        //Display new buttons
         Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
 
-        btnFront.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
+        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
 
-        btnFront.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
     }
 
     /// <summary>
@@ -89,19 +87,17 @@ public class BraceletMenu : MonoBehaviour
     /// </summary>
     public void onFrontClick()
     {
-        Debug.Log("Front click");
         foreach (GameObject btn in buttonList)
         {
-            Debug.Log("Destroy button");
             Destroy(btn);
         }
         currentPage++;
         //display new
         Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
 
-        btnFront.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
+        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
 
-        btnFront.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
 
     }
 
@@ -113,7 +109,6 @@ public class BraceletMenu : MonoBehaviour
     {
         foreach (GameObject btn in buttonList)
         {
-            Debug.Log("Destroy button");
             Destroy(btn);
         }
         braceletMenu.SetActive(false);
@@ -154,7 +149,6 @@ public class BraceletMenu : MonoBehaviour
         if (GUI.Button(new Rect(370, 40, 150, 40), "item click bracelet 0"))
         {
             onItemClickDebug(0);
-
         }
 
     }

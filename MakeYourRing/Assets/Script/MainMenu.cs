@@ -22,10 +22,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     private GameObject settingsMenu;
     [SerializeField]
-    private GameObject mainMenu;
-    [SerializeField]
     private GameObject inventoryMenu;
-
 
     public GameObject lastItem;
 

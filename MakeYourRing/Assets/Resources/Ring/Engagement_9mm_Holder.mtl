@@ -1,2 +1,7 @@
-# Blender 3.3.0 MTL File: 'Engagement_9mm.blend'
-# www.blender.org
+newmtl default (Instance)
+Kd 1 1 1
+Tr 0.0
+d 1.0
+Ks 0.1999999 0.1999999 0.1999999
+illum 2
+

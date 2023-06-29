@@ -1,0 +1,14 @@
+newmtl Material (Instance)
+Kd 0.824038 0.824038 0.824038
+Tr 0.0
+d 1.0
+Ks 0.5 0.5 0.5
+illum 2
+
+newmtl Silver.005
+Kd 0.824038 0.824038 0.824038
+Tr 0.0
+d 1.0
+Ks 0.5 0.5 0.5
+illum 2
+

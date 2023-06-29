@@ -1,12 +1,7 @@
-# Blender 3.3.0 MTL File: 'None'
-# www.blender.org
+newmtl wire_086086086 (Instance)
+Kd 0.8 0.8 0.8
+Tr 0.0
+d 1.0
+Ks 0 0 0
+illum 2
 
-newmtl wire_086086086
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
