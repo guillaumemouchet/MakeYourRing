@@ -18,7 +18,8 @@ using UnityEngine;
 using System;
 using Dummiesman;
 using TMPro;
-
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Dummiesman
 {
@@ -129,7 +130,7 @@ namespace Dummiesman
 
             var buffer = new CharWordReader(reader, 4 * 1024);
 
-
+            var reversed = false;
             //do the reading
             while (!buffer.endReached)
             {
@@ -147,7 +148,13 @@ namespace Dummiesman
                 //comment or blank
                 if (buffer.Is("#"))
                 {
-                    buffer.SkipUntilNewLine();
+                    buffer.ReadUntilNewLine();
+                    string content = buffer.GetString();
+                    var res = Regex.Match(input: content, pattern: ".* Aaro4130 .*");
+                    if (res.Success)
+                    {
+                        reversed = true;
+                    }
                     continue;
                 }
 
@@ -310,9 +317,21 @@ namespace Dummiesman
 
                 modifiedMaterial.renderQueue = -1;
                 mesh.material = modifiedMaterial;
-
-                Debug.Log("mesh" + mesh);
             }
+            
+            if(reversed)
+            {
+                //This isn't the best solution
+                //But when an saved .obj is reloaded it's text is reversed so need to do a small correction
+                Transform objTransform = obj.GetComponent<Transform>();
+                objTransform.localScale = new Vector3(objTransform.localScale.x * -1, objTransform.localScale.y, objTransform.localScale.z);
+                for (int j = 0; j < objTransform.childCount; j++)
+                {
+                    Transform childTransform = objTransform.GetChild(j).transform;
+                    childTransform.localScale = new Vector3(childTransform.localScale.x * -1, childTransform.localScale.y, childTransform.localScale.z);
+                }
+            }
+
             return obj;
         }
 

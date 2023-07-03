@@ -32,7 +32,7 @@ using Windows.Storage;
 public class SettingsMenu : MonoBehaviour
 {
 
-    [SerializeField] 
+    [SerializeField]
     private GameObject settingsMenu;
 
     [SerializeField]
@@ -63,10 +63,16 @@ public class SettingsMenu : MonoBehaviour
                     localPath = "/Assets/Result/";
 #endif
 
+            ////remove the follower the time of the save
+            //leaderObject.GetComponent<MergeJewel>().follower.transform.SetParent(null, true);
+
             var globalPath = Application.dataPath + localPath + leaderObject.name + ".obj";
 
             GameObjectExporterToObj objExporter = new GameObjectExporterToObj();
             objExporter.Export(leaderObject, globalPath);
+
+            ////re-add the follower
+            //leaderObject.GetComponent<MergeJewel>().follower.transform.SetParent(leaderObject.transform, true);
 
             saved = true;
 
@@ -118,12 +124,10 @@ public class SettingsMenu : MonoBehaviour
         if (objPaths.Length > 0)
         {
             objPath = objPaths[0];
-
-
             FileInfo fi = new FileInfo(objPath);
 
             //TODO add error message
-            if (fi.Length <= 10000)
+            if (fi.Length <= 20000000) // 40 000 ko
             {
                 OBJLoader objLoader = new OBJLoader();
 
@@ -166,14 +170,23 @@ public class SettingsMenu : MonoBehaviour
             {
                 Debug.Log("File is too big");
 #if UNITY_EDITOR
-                UnityEditor.EditorUtility.DisplayDialog("File too big", "File must be smaller than 10'000 ko", "ok");
-#endif //TODO : find similar action outisde of unity
+                UnityEditor.EditorUtility.DisplayDialog("File too big", "File must be smaller than 20'000 ko", "ok");
+#else
+                confirmationMessage.SetActive(true);
 
+                //Set the instructions in front of the player
+                Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+                confirmationMessage.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.4f - cameratransform.up * 0.1f;
+                confirmationMessage.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+
+
+                confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Load GameObject failed";
+                confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "Your object file must be smaller than 20'000ko, try creating it in smaller parts ";
+#endif
             }
 
         }
     }
-
 
     /// <summary>
     /// Display a hand to see the creation
@@ -182,7 +195,6 @@ public class SettingsMenu : MonoBehaviour
     /// </summary>
     public void OnDisplayClick()
     {
-        Debug.Log("onDisplayClick");
         hand.SetActive(true);
         try
         {
@@ -194,14 +206,19 @@ public class SettingsMenu : MonoBehaviour
             tryObject.transform.root.localRotation = Quaternion.identity;
 
             tryObject.transform.root.transform.SetParent(position.transform);
+
+            tryObject.GetComponent<MergeJewel>().enableFollower();
         }
-        catch (Exception e)
+        catch (Exception e)// No tryObject where found
         {
             Debug.Log(e);
             return;
         }
 
     }
+
+
+#if DEBUG_MODE
 
     /// <summary>
     /// This method add quick button for debug purpous
@@ -211,14 +228,12 @@ public class SettingsMenu : MonoBehaviour
         if (GUI.Button(new Rect(320, 10, 100, 30), "Import"))
         {
             OnImportClick();
-
         }
 
         if (GUI.Button(new Rect(420, 10, 100, 30), "Save"))
         {
             OnSaveClick();
-
         }
-
     }
+#endif
 }

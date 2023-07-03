@@ -25,15 +25,10 @@ public class DisplayMenu : MonoBehaviour
         List<GameObject> listChildren = new List<GameObject>();
         GameObject.Find("position").GetChildGameObjects(listChildren);
 
-        foreach(GameObject child in listChildren)
+        foreach (GameObject child in listChildren)
         {
             child.transform.SetParent(null, true);
         }
-
         GameObject.Find("Hand").SetActive(false);
-
     }
-
-
-
 }

@@ -31,20 +31,23 @@ public class CanvasSampleOpenFileText : MonoBehaviour, IPointerDownHandler {
     // Standalone platforms & editor
     //
     public void OnPointerDown(PointerEventData eventData) { }
+    [System.Obsolete]
 
     void Start() {
         var button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
     }
+    [System.Obsolete]
 
     private void OnClick() {
         var paths = StandaloneFileBrowser.OpenFilePanel("Title", "", "txt", false);
         if (paths.Length > 0) {
-            StartCoroutine(OutputRoutine(new System.Uri(paths[0]).AbsoluteUri));
+            _ = StartCoroutine(OutputRoutine(new System.Uri(paths[0]).AbsoluteUri));
         }
     }
 #endif
 
+    [System.Obsolete]
     private IEnumerator OutputRoutine(string url) {
         var loader = new WWW(url);
         yield return loader;

@@ -31,11 +31,13 @@ public class CanvasSampleOpenFileTextMultiple : MonoBehaviour, IPointerDownHandl
     // Standalone platforms & editor
     //
     public void OnPointerDown(PointerEventData eventData) { }
+    [System.Obsolete]
 
     void Start() {
         var button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
     }
+    [System.Obsolete]
 
     private void OnClick() {
         // var paths = StandaloneFileBrowser.OpenFilePanel("Title", "", "txt", true);
@@ -49,6 +51,7 @@ public class CanvasSampleOpenFileTextMultiple : MonoBehaviour, IPointerDownHandl
         }
     }
 #endif
+    [System.Obsolete]
 
     private IEnumerator OutputRoutine(string[] urlArr) {
         var outputText = "";

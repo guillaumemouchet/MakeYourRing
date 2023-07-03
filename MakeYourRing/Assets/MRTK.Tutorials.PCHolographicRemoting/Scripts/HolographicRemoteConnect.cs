@@ -8,7 +8,7 @@ using System.Net;
  |	    Project:  MakeYourRing Travail de Bachelor
  |
  |      Author:  Guillaume Mouchet - ISC3il-b
- |      Notes: This code is inspired and used from this tutorial by Microsoft https://learn.microsoft.com/en-us/training/modules/pc-holographic-remoting-tutorials/1-introduction
+ |      Notes: This code is inspired and modified from this tutorial by Microsoft https://learn.microsoft.com/en-us/training/modules/pc-holographic-remoting-tutorials/1-introduction
  *===========================================================================*/
 
 /**
@@ -30,18 +30,14 @@ public class HolographicRemoteConnect : MonoBehaviour
 
     [SerializeField, Tooltip("The configuration information for the remote connection.")]
 
-    // Parameters where given in the example, changing them doens't help with the fps
-    //private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 2000, VideoCodec = RemotingVideoCodec.H264, EnableAudio = false};
-
-
     /**
-    * 
+    * Parameters where given in the example, changing them doens't help with the fps
     * Changing the codex doesn't change the FPS
     * Changing the MaxBitrate doestn't change the FPS
     * */
     private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 20000, VideoCodec = RemotingVideoCodec.H265, EnableAudio = false };
 
-   
+
     /// <summary>
     /// Connect the application to the hololens using AppRemoting
     /// </summary>
@@ -50,10 +46,7 @@ public class HolographicRemoteConnect : MonoBehaviour
         connected = true;
         remotingConfiguration_1.RemoteHostName = IP_1;
 
-        /**
-         * Changing the Remoting doesn't change the FPS
-         **/
-        AppRemoting.StartConnectingToPlayer(remotingConfiguration_1);
+        AppRemoting.StartConnectingToPlayer(remotingConfiguration_1); //Changing the remoting type doesn't change the FPS
 
     }
 

@@ -16,7 +16,6 @@ using UnityEngine;
 
 public class Utility : MonoBehaviour
 {
-
     public enum jewelType
     {
         Ring,
@@ -54,7 +53,6 @@ public class Utility : MonoBehaviour
         }
 
         var globalPath = Application.dataPath + localPath;
-        Debug.Log(globalPath);
         return globalPath;
     }
 
@@ -94,7 +92,6 @@ public class Utility : MonoBehaviour
         }
 
         var globalPath = Application.dataPath + localPath;
-        Debug.Log(globalPath);
         return globalPath;
     }
 
@@ -189,16 +186,6 @@ public class Utility : MonoBehaviour
 
         obj = addImportantComponent(obj);
 
-        //This isn't the best solution
-        //But when an saved .obj is reloaded it's text is reversed so need to do a small correction
-        Transform objTransform = obj.GetComponent<Transform>();
-        objTransform.localScale = new Vector3(objTransform.localScale.x * -1, objTransform.localScale.y, objTransform.localScale.z);
-        for (int j = 0; j < objTransform.childCount; j++)
-        {
-            Transform childTransform = objTransform.GetChild(j).transform;
-            childTransform.localScale = new Vector3(childTransform.localScale.x * -1, childTransform.localScale.y, childTransform.localScale.z);
-        }
-
     }
 
 
@@ -206,7 +193,7 @@ public class Utility : MonoBehaviour
     /// This method add all the Components to an .obj created in runtime
     /// </summary>
     /// <param name="obj">newly created GameObject</param>
-    /// <returns>Returns the same GameObject, normally not usefull</returns>
+    /// <returns>Returns the same GameObject, normally not used</returns>
     public static GameObject addImportantComponent(GameObject obj)
     {
         obj.AddComponent<MergeJewel>();
@@ -227,7 +214,7 @@ public class Utility : MonoBehaviour
             combine[i].mesh = meshFilters[i].sharedMesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
             meshFilters[i].gameObject.SetActive(false);
-            
+
             i++;
         }
         Array.Clear(meshFilters, 0, meshFilters.Length);
@@ -253,14 +240,11 @@ public class Utility : MonoBehaviour
         obj.AddComponent<ObjectManipulator>();
         obj.AddComponent<NearInteractionGrabbable>();
 
-        //Change the size to not be bigger than 0.5 in the relative world size
+        //Change the size to not be bigger than 0.3 in the relative world size
         Vector3 size = obj.GetComponent<MeshCollider>().bounds.size;
         if (Math.Abs(size.x) > 0.3f)
         {
-            Debug.Log("size en x " + size.x);
-
             float ratio = (size.x) / 0.3f;
-            Debug.Log("ratio " + ratio);
             obj.transform.localScale = new Vector3(obj.transform.localScale.x / ratio, obj.transform.localScale.y / ratio, obj.transform.localScale.z / ratio);
         }
 
@@ -268,9 +252,6 @@ public class Utility : MonoBehaviour
         Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
         obj.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.2f;
         obj.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
-
-
-        obj.GetComponent<MeshCollider>().convex = false;
 
         return obj;
     }
@@ -300,11 +281,9 @@ public class Utility : MonoBehaviour
                 string ExamplePath = "/Assets/Resources/EXAMPLE.txt";
 #endif
 
-            Debug.Log("EXAMPLE file " + Application.dataPath + ExamplePath);
             string contentMeta = File.ReadAllText(Application.dataPath + ExamplePath);
 
             string exportNameMeta = file + ".meta";
-            Debug.Log("exportNameMeta Meta " + exportNameMeta);
 
             System.IO.File.WriteAllText(exportNameMeta, contentMeta);
         }

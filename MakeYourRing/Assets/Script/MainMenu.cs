@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 /*=============================================================================
@@ -40,8 +42,18 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void OnDeleteClick()
     {
-        Debug.Log("OnDeleteClicked, find selected Item");
+        Debug.Log("OnDeleteClicked, find last selected Item");
         Destroy(lastItem);
+
+        //Detach all children, only destroy the item
+        List<GameObject> listChildren = new List<GameObject>();
+        lastItem.GetChildGameObjects(listChildren);
+
+        foreach (GameObject child in listChildren)
+        {
+            child.transform.SetParent(null, true);
+        }
+
     }
 
     /// <summary>

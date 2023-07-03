@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
 {
@@ -19,7 +20,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
         /// The frame of reference for viewing is defined by the Solver Handler Tracked Target Type
         /// </summary>
         [Tooltip("The GameObject transform to point the indicator towards when this object is not in view.\nThe frame of reference for viewing is defined by the Solver Handler Tracked Target Type")]
-        public Transform DirectionalTarget;
+        public Vector3 DirectionalTarget;
 
         /// <summary>
         /// The minimum scale for the indicator object
@@ -78,7 +79,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
                 return false;
             }
 
-            return !MathUtilities.IsInFOV(DirectionalTarget.position, SolverHandler.TransformTarget,
+            return !MathUtilities.IsInFOV(DirectionalTarget, SolverHandler.TransformTarget,
                 VisibilityScaleFactor * CameraCache.Main.fieldOfView, VisibilityScaleFactor * CameraCache.Main.GetHorizontalFieldOfViewDegrees(),
                 CameraCache.Main.nearClipPlane, CameraCache.Main.farClipPlane);
         }
@@ -113,7 +114,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
 
             Vector3 origin = solverReferenceFrame.position + solverReferenceFrame.forward;
 
-            Vector3 trackerToTargetDirection = (DirectionalTarget.position - solverReferenceFrame.position).normalized;
+            Vector3 trackerToTargetDirection = (DirectionalTarget - solverReferenceFrame.position).normalized;
 
             // Project the vector (from the frame of reference (SolverHandler target) to the Directional Target) onto the "viewable" plane
             Vector3 indicatorDirection = Vector3.ProjectOnPlane(trackerToTargetDirection, -solverReferenceFrame.forward).normalized;

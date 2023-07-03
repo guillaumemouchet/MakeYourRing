@@ -70,7 +70,7 @@ public class GameObjectExporterToObj
             StringBuilder sb = new StringBuilder();
             StringBuilder sbMaterials = new StringBuilder();
             sb.AppendLine("# Export of " + SceneManager.GetActiveScene());
-            sb.AppendLine("# from Aaro4130 OBJ Exporter " + versionString);
+            sb.AppendLine("# from modified Aaro4130 OBJ Exporter " + versionString);
             if (generateMaterials)
             {
                 sb.AppendLine("mtllib " + baseFileName + ".mtl");
@@ -99,8 +99,8 @@ public class GameObjectExporterToObj
                     for (int j = 0; j < mats.Length; j++)
                     {
                         Material m = new Material(mats[j]);
-                        
-                    if (!materialCache.ContainsKey(m.name))
+
+                        if (!materialCache.ContainsKey(m.name))
                         {
                             materialCache[m.name] = true;
                             sbMaterials.Append(MaterialToString(m));
@@ -170,17 +170,12 @@ public class GameObjectExporterToObj
                         int idx0 = tris[t + 2] + 1 + lastIndex;
                         int faceOrder = (int)Mathf.Clamp((mf.gameObject.transform.lossyScale.x * mf.gameObject.transform.lossyScale.z), -1, 1);
 
-                        Debug.Log("faceOrder " + faceOrder);
                         if (faceOrder <= 0)
                         {
-                            Debug.Log("IN ");
-
                             sb.AppendLine("f " + ConstructOBJString(idx2) + " " + ConstructOBJString(idx1) + " " + ConstructOBJString(idx0));
                         }
                         else
                         {
-                            Debug.Log("OUT ");
-
                             sb.AppendLine("f " + ConstructOBJString(idx0) + " " + ConstructOBJString(idx1) + " " + ConstructOBJString(idx2));
                         }
                     }
@@ -208,7 +203,7 @@ public class GameObjectExporterToObj
                     k++;
                 }
                 System.IO.File.WriteAllText(matFile, sbMaterials.ToString());
-                Debug.Log(exportFileInfo.Directory.FullName + "\\" + baseFileName + ".mtl" + sbMaterials.ToString());
+                Debug.Log(exportFileInfo.Directory.FullName + "\\" + baseFileName + ".mtl");
             }
         }
         catch (System.Exception ex)
@@ -261,7 +256,7 @@ public class GameObjectExporterToObj
         }
         catch (System.Exception ex)
         {
-            Debug.Log( ex + " \nCould not export texture: " + t.name + ". Is it readable?");
+            Debug.Log(ex + " \nCould not export texture: " + t.name + ". Is it readable?");
             return "null";
         }
     }

@@ -1,5 +1,4 @@
 using Dummiesman;
-using Microsoft.MixedReality.Toolkit.UI;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
@@ -67,7 +66,6 @@ public class BraceletMenu : MonoBehaviour
     /// </summary>
     public void onBackClick()
     {
-
         foreach (GameObject btn in buttonList)
         {
             Destroy(btn);
@@ -103,7 +101,7 @@ public class BraceletMenu : MonoBehaviour
 
 
     /// <summary>
-    /// On the close of the panel we want to destroy the button and create new one each time
+    /// On the close of the panel we want to destroy the button
     /// </summary>
     public void onCloseClick()
     {
@@ -130,8 +128,6 @@ public class BraceletMenu : MonoBehaviour
 #endif
         var globalPath = Application.dataPath + localPath;
 
-        Debug.Log(globalPath);
-
         OBJLoader objLoader = new OBJLoader();
         //Load the file
         GameObject obj = objLoader.Load(globalPath);
@@ -141,6 +137,7 @@ public class BraceletMenu : MonoBehaviour
     }
 
 
+#if DEBUG_MODE
     /// <summary>
     /// This method adds quick button for debug purpous
     /// </summary>
@@ -150,6 +147,6 @@ public class BraceletMenu : MonoBehaviour
         {
             onItemClickDebug(0);
         }
-
     }
+#endif
 }

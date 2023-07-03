@@ -1,12 +1,11 @@
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /*=============================================================================
  |	    Project:  MakeYourRing Travail de Bachelor
@@ -18,14 +17,19 @@ using UnityEngine.UIElements;
 public class MergeJewel : MonoBehaviour
 {
     private GameObject instance;
-    private GameObject follower = null;
+    public GameObject follower = null;
     public GameObject leader = null;
 
     private bool keepWordPosition = true;
     private List<GameObject> ignoredCollisions = new List<GameObject>();
     private Vector3 spherePosition = Vector3.zero;
     private float radius = 0.2f;
+    private RigidbodyConstraints freezePosition = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
 
+
+    /// <summary>
+    /// Calculate and draw the sphere collider of the object
+    /// </summary>
     private void OnDrawGizmos()
     {
         Vector3 child = this.GetComponentInChildren<MeshRenderer>().bounds.center;
@@ -35,7 +39,6 @@ public class MergeJewel : MonoBehaviour
 
 
         Renderer rend = this.GetComponentInChildren<MeshRenderer>();
-        //Debug.Log("Radius " + rend.bounds.size);
         radius = (rend.bounds.size.x + rend.bounds.size.y + rend.bounds.size.z) / 3;
 
         Gizmos.DrawWireSphere(spherePosition, radius);
@@ -47,19 +50,20 @@ public class MergeJewel : MonoBehaviour
     void FixedUpdate()
     {
 
-        //TODO
-        if (this.CompareTag("leader") && follower==null)
+        //Create an Follower to shoe the player where is the leader
+        if (this.CompareTag("leader") && follower == null)
         {
-            follower = Instantiate(instance, this.transform,false);
-
-            follower.GetComponent<DirectionalIndicatorModified>().DirectionalTarget = this.transform;
-        }else if(this.CompareTag("jewel"))
+            follower = Instantiate(instance, this.GetComponentInChildren<MeshRenderer>().bounds.center, new Quaternion(0,0,0,0), null);
+            enableFollower();
+        }
+        else if (this.CompareTag("jewel"))
         {
             Destroy(follower);
             follower = null;
         }
 
-        List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius, LayerMask.GetMask("Jewel")).ToList<Collider>();//, LayerMask.NameToLayer("Jewel"));
+        //Find the object in range of the sphere
+        List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius, LayerMask.GetMask("Jewel")).ToList<Collider>();
         //Skip the current gameObject
         ObjectInRange.Remove(ObjectInRange.SingleOrDefault(r => r.gameObject == this.gameObject));
 
@@ -87,7 +91,7 @@ public class MergeJewel : MonoBehaviour
                 if (collider.gameObject == leader) inRange = true; //The leader is still in range of this, we stay attached
             }
 
-            if (!inRange && this.leader != GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem) // don't separate if the moving object is the leader, or else it give a bug
+            if (!inRange && this.leader != GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem) // don't separate if the moving object is his leader
             {
 
                 Debug.Log("Separate in the gameobject " + this.name);
@@ -124,25 +128,17 @@ public class MergeJewel : MonoBehaviour
                 this.tag = totalThis > 0 ? "leader" : "jewel";
 
                 this.leader.tag = totalLeader > 0 ? "leader" : "jewel";
-                
+
                 //finish the separation
                 this.leader = null;
 
-
-
-                
-
             }
-
-
-
 
         }
 
         //Fuze the item if they are in range
         foreach (Collider collider in ObjectInRange)
         {
-            //Debug.Log("Collider " + collider);
             merge(collider);
         }
 
@@ -186,6 +182,10 @@ public class MergeJewel : MonoBehaviour
                 ignoredCollisions.Add(child);
             }
         }
+
+        if (this.CompareTag("leader") && follower != null) //update position of the follower
+            follower.GetComponent<DirectionalIndicatorModified>().enabled = false;
+
     }
 
     /// <summary>
@@ -204,21 +204,32 @@ public class MergeJewel : MonoBehaviour
             }
         }
         ignoredCollisions.Clear();
+
+        enableFollower();
+
+    }
+
+    public void enableFollower()
+    {
+        follower.GetComponent<DirectionalIndicatorModified>().enabled = true;
+
+        if (this.CompareTag("leader") && follower != null) //update position of the follower
+            follower.GetComponent<DirectionalIndicatorModified>().DirectionalTarget = this.GetComponentInChildren<MeshRenderer>().bounds.center;
     }
 
 
-    private IEnumerator MaCoroutine(Rigidbody obj)
+    private IEnumerator RemoveConstraints(Rigidbody obj)
     {
-        // Attendre pendant 1 secondes
+        // Wait a certain time
         yield return new WaitForSeconds(0.7f);
 
+        // Remove the constraints to allow movements
         obj.constraints = RigidbodyConstraints.None;
-
     }
 
 
 
-    //On cherche à savoir si ils sont dans la même hierarchie, parce que si c'est vrai on peut juste éviter les collisions
+    //Check if object are in the same hierarchy
     private bool isRelated(GameObject other)
     {
         return other.transform.root == this.transform.root;
@@ -231,16 +242,14 @@ public class MergeJewel : MonoBehaviour
     /// The merge depends on if they are already a leader or not
     /// </summary>
     /// <param name="other">the Collision Collider of the other GameObject it touched</param>
-    //private void OnCollisionEnter(Collision other)
-
     private void merge(Collider other)
     {
 
-        if (isRelated(other.gameObject)) { Debug.Log("They are Related "); return; };
+        if (isRelated(other.gameObject)) { /*Debug.Log("They are Related ");*/ return; };
 
-        if (other.gameObject.CompareTag("Untagged")) { Debug.Log("Not a jewel"); return; } //Normally already checked by the physics
+        //        if (other.gameObject.CompareTag("Untagged")) { Debug.Log("Not a jewel"); return; } //Normally already checked by the physics
 
-        if (other.gameObject.CompareTag("jewel") || other.gameObject.CompareTag("leader") && this.gameObject.CompareTag("jewel") || this.gameObject.CompareTag("leader")) //Only want to check collision between jewel and leaders
+        //        if (other.gameObject.CompareTag("jewel") || other.gameObject.CompareTag("leader") && this.gameObject.CompareTag("jewel") || this.gameObject.CompareTag("leader")) //Only want to check collision between jewel and leaders
         {
             // JEWEL TRIGGER JEWEL
             if (other.gameObject.CompareTag("jewel") && this.gameObject.CompareTag("jewel"))
@@ -248,25 +257,25 @@ public class MergeJewel : MonoBehaviour
                 //They both have a leader
                 if (this.leader != null && other.gameObject.GetComponent<MergeJewel>().leader != null)
                 {
-                    other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<Rigidbody>().constraints = freezePosition;
 
                     //One leader become the leader of the other
                     other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<MergeJewel>().leader = this.leader;
                     other.gameObject.GetComponent<MergeJewel>().leader.transform.SetParent(this.leader.transform, keepWordPosition);
 
-                    StartCoroutine(MaCoroutine(other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<Rigidbody>()));
+                    StartCoroutine(RemoveConstraints(other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<Rigidbody>()));
 
                     return;
                 }
                 else if (this.leader != null) //Only "this" have a leader -> other become the children
                 {
 
-                    other.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    other.GetComponent<Rigidbody>().constraints = freezePosition;
 
                     other.gameObject.GetComponent<MergeJewel>().leader = this.leader;
                     other.transform.SetParent(this.leader.transform, keepWordPosition);
 
-                    StartCoroutine(MaCoroutine(other.GetComponent<Rigidbody>()));
+                    StartCoroutine(RemoveConstraints(other.GetComponent<Rigidbody>()));
 
 
                     return;
@@ -274,12 +283,12 @@ public class MergeJewel : MonoBehaviour
                 }
                 else if (other.gameObject.GetComponent<MergeJewel>().leader != null) //Only "other" have a leader -> "this" become the children
                 {
-                    this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    this.GetComponent<Rigidbody>().constraints = freezePosition;
 
                     this.leader = other.gameObject.GetComponent<MergeJewel>().leader;
                     this.transform.SetParent(other.gameObject.GetComponent<MergeJewel>().leader.transform, keepWordPosition);
 
-                    StartCoroutine(MaCoroutine(this.GetComponent<Rigidbody>()));
+                    StartCoroutine(RemoveConstraints(this.GetComponent<Rigidbody>()));
 
                     return;
 
@@ -287,14 +296,14 @@ public class MergeJewel : MonoBehaviour
                 }
                 else //None of them have leaders -> other become the leader
                 {
-                    this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    this.GetComponent<Rigidbody>().constraints = freezePosition;
 
                     other.gameObject.tag = "leader";
                     this.gameObject.tag = "jewel";
                     leader = other.gameObject;
                     this.transform.SetParent(other.transform, keepWordPosition);
 
-                    StartCoroutine(MaCoroutine(this.GetComponent<Rigidbody>()));
+                    StartCoroutine(RemoveConstraints(this.GetComponent<Rigidbody>()));
 
                     return;
 
@@ -305,7 +314,7 @@ public class MergeJewel : MonoBehaviour
             //LEADER TRIGGER LEADER
             if (other.gameObject.CompareTag("leader") && this.gameObject.CompareTag("leader")) //Both of them are leaders -> "this" becomes the child
             {
-                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                this.GetComponent<Rigidbody>().constraints = freezePosition;
 
                 other.gameObject.tag = "leader";
                 this.gameObject.tag = "jewel";
@@ -313,7 +322,7 @@ public class MergeJewel : MonoBehaviour
 
                 this.transform.SetParent(other.transform, keepWordPosition);
 
-                StartCoroutine(MaCoroutine(this.GetComponent<Rigidbody>()));
+                StartCoroutine(RemoveConstraints(this.GetComponent<Rigidbody>()));
 
                 return;
             }
@@ -321,33 +330,28 @@ public class MergeJewel : MonoBehaviour
             //LEADER TRIGGER JEWEL OR JEWEL TRIGGER LEADER
             if (other.gameObject.CompareTag("leader")) // Other is already the leader and "this" is already a child
             {
-                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                this.GetComponent<Rigidbody>().constraints = freezePosition;
 
                 this.leader = other.gameObject;
 
                 this.transform.SetParent(other.transform, keepWordPosition);
 
-                StartCoroutine(MaCoroutine(this.GetComponent<Rigidbody>()));
+                StartCoroutine(RemoveConstraints(this.GetComponent<Rigidbody>()));
 
                 return;
             }
             else if (this.gameObject.CompareTag("leader"))// this is already the leader and other is already a child
             {
-                other.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                other.GetComponent<Rigidbody>().constraints = freezePosition;
 
                 other.gameObject.GetComponent<MergeJewel>().leader = this.gameObject;
 
                 other.transform.SetParent(this.transform, keepWordPosition);
 
-                StartCoroutine(MaCoroutine(other.GetComponent<Rigidbody>()));
+                StartCoroutine(RemoveConstraints(other.GetComponent<Rigidbody>()));
 
                 return;
             }
         }
-
-
-        
-
     }
-
 }

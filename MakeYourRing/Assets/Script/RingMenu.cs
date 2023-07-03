@@ -137,6 +137,9 @@ public class RingMenu : MonoBehaviour
         Utility.addImportantComponent(obj); //Add the important Components
     }
 
+
+#if DEBUG_MODE
+
     /// <summary>
     /// This method add quick button for debug purpous
     /// </summary>
@@ -147,4 +150,5 @@ public class RingMenu : MonoBehaviour
             onItemClickDebug(0);
         }
     }
+#endif
 }

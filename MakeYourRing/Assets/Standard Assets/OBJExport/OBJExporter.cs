@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -162,7 +163,7 @@ public class OBJExporter
             //work on export
             StringBuilder sb = new StringBuilder();
             StringBuilder sbMaterials = new StringBuilder();
-            sb.AppendLine("# Export of " + Application.loadedLevelName);
+            sb.AppendLine("# Export of " + SceneManager.GetActiveScene());
             sb.AppendLine("# from Aaro4130 OBJ Exporter " + versionString);
             if (generateMaterials)
             {
@@ -318,7 +319,7 @@ public class OBJExporter
         }
         catch (System.Exception ex)
         {
-            Debug.Log("Erreur dans le Export"); //Need to change the jpg to readable in unity, may be a problem
+            Debug.Log("Erreur dans le Export" + ex); //Need to change the jpg to readable in unity, may be a problem
         }
     }
 
@@ -400,7 +401,7 @@ public class OBJExporter
         }
         catch (System.Exception ex)
         {
-            Debug.Log("Could not export texture : " + t.name + ". is it readable?"); //Need to change the jpg to readable in unity, may be a problem
+            Debug.Log("Could not export texture : " + t.name + ". is it readable?\n" + ex); //Need to change the jpg to readable in unity, may be a problem
             return "null";
         }
 
