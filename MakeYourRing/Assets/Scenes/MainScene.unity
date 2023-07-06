@@ -345,7 +345,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 138283197982706281}
         m_TargetAssemblyTypeName: BraceletMenu, Assembly-CSharp
-        m_MethodName: onBackClick
+        m_MethodName: OnBackClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1885,13 +1885,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0c4e090348d0774da4866b9416e38a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfPages: 0
+  currentPage: 1
   btnBack: {fileID: 1236036421}
   btnForward: {fileID: 787115412}
   ringMenu: {fileID: 7602650870518046657}
   prefabButton: {fileID: 2871598954841711986}
   parent: {fileID: 150580515759730679}
-  numberOfPages: 0
-  currentPage: 1
 --- !u!1 &315304293
 GameObject:
   m_ObjectHideFlags: 0
@@ -2965,7 +2965,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 138283197982706281}
         m_TargetAssemblyTypeName: BraceletMenu, Assembly-CSharp
-        m_MethodName: onFrontClick
+        m_MethodName: OnFrontClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4214,34 +4214,34 @@ MonoBehaviour:
 
 
     How
-    does it works ?
+    does it work ?
 
 
     1. Look at your hand to see the hand menu.
 
     2. Open
-    the inventory to acces already used assets
+    the Inventory to access already-imported assets.
 
-    3. Or go to Settings to import
-    new ones
-
-
-    Once you have loaded new assets you can use your hands to move
-    them and fuze them together, you may have a bit a latency when then come close
-    together.
+    3. Go to Settings to import
+    new ones.
 
 
-    You can also delete the last selected item, save your creations
-    or see it on a display hand.
+    Once you have loaded new assets, you can use your hands to move
+    and fuse them together. You may have a bit of latency when they come close together.
 
 
+    You
+    can also delete the last selected item, save your creations, or see it on a hand
+    display.
 
-    The blue arrow shows the inventory, in case
-    you lost it.
+
+    Your imported asset need to be stored in the either the Bracelet
+    or Ring folder shown in the file system, or else you won''t have quick acces
+    from the Inventory.
 
 
-    The red arrows shows the leader of your group of object, you
-    can move it to make all the group move at the same time.'
+    The red arrows show the leader of your group of object,
+    you can select it to make all his objects move at the same time.'
 --- !u!222 &450930368
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6068,9 +6068,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbaa71fb1a101bf42b1a444d738829cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastItem: {fileID: 0}
   settingsMenu: {fileID: 45127824549143381}
   inventoryMenu: {fileID: 2006205745}
-  lastItem: {fileID: 0}
 --- !u!114 &782347721 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7121081727263079909, guid: 64ee3d6ec0e370c449050c64bac3bc43, type: 3}
@@ -6447,7 +6447,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 296043365}
         m_TargetAssemblyTypeName: RingMenu, Assembly-CSharp
-        m_MethodName: onFrontClick
+        m_MethodName: OnFrontClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10087,7 +10087,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 296043365}
         m_TargetAssemblyTypeName: RingMenu, Assembly-CSharp
-        m_MethodName: onBackClick
+        m_MethodName: OnBackClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11644,7 +11644,7 @@ PrefabInstance:
       objectReference: {fileID: 2006205746}
     - target: {fileID: 645975356266253446, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: onCloseClick
+      value: OnCloseClick
       objectReference: {fileID: 0}
     - target: {fileID: 645975356324204604, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: m_Layer
@@ -26959,13 +26959,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30a589df05630b4192bb9f36bb8b944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfPages: 0
+  currentPage: 0
   btnBack: {fileID: 16656171}
   btnForward: {fileID: 376544411}
   braceletMenu: {fileID: 7405639301904664056}
   prefabButton: {fileID: 6691162555860664975}
   parent: {fileID: 960092679814641102}
-  numberOfPages: 0
-  currentPage: 0
 --- !u!1 &150580515759730679
 GameObject:
   m_ObjectHideFlags: 0
@@ -27805,7 +27805,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &919132148569890424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28263,7 +28263,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a3f7968e5392bd4e8c0e9bf3e89f5f4, type: 2}
+  - {fileID: 2100000, guid: 61cb403bd3e0d1e469253369f8ce6fff, type: 2}
+  - {fileID: 2100000, guid: 61cb403bd3e0d1e469253369f8ce6fff, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -36360,7 +36361,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 138283197982706281}
         m_TargetAssemblyTypeName: BraceletMenu, Assembly-CSharp
-        m_MethodName: onCloseClick
+        m_MethodName: OnCloseClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -38272,7 +38273,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 296043365}
         m_TargetAssemblyTypeName: RingMenu, Assembly-CSharp
-        m_MethodName: onCloseClick
+        m_MethodName: OnCloseClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

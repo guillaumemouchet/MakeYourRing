@@ -1,7 +1,3 @@
-using Dummiesman;
-using SFB;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -17,6 +13,9 @@ using UnityEngine;
 public class DisplayMenu : MonoBehaviour
 {
 
+    /*=============================================================================
+    |                               Public Functions
+    *===========================================================================*/
     /// <summary>
     /// Hide the hand and seperate the Jewel to still be able to work on it
     /// </summary>
@@ -31,4 +30,8 @@ public class DisplayMenu : MonoBehaviour
         }
         GameObject.Find("Hand").SetActive(false);
     }
+
+    /*=============================================================================
+    |                               Private Functions
+    *===========================================================================*/
 }

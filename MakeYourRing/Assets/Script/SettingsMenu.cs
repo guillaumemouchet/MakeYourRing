@@ -28,10 +28,13 @@ using Windows.Storage;
  * Display icon : designed by Freepik from Flaticon (https://www.flaticon.com/free-icon/mannequin_998774)
  **/
 
-//TODO Toujours ajouter le dossier asset fournis dans le build, c'est le que le User devra venir stocker ses eléments (Ring, Bracelet, Result), l'autre asset en plus est juste pour le Debug
+
+// TODO : Find a way to add the Asset folder on each build
 public class SettingsMenu : MonoBehaviour
 {
-
+    /*=============================================================================
+     |                               Attributes
+     *===========================================================================*/
     [SerializeField]
     private GameObject settingsMenu;
 
@@ -41,66 +44,43 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField]
     private GameObject confirmationMessage;
 
+
+    /*=============================================================================
+     |                               Public Functions
+     *===========================================================================*/
     public void OnCloseClick()
     {
         settingsMenu.SetActive(false);
     }
 
     /// <summary>
-    /// Save the leader object in the Result folder
+    /// Display a hand to see the creation
+    /// Add the leader of the last selected item near the finger
+    /// The player still need to adjust the position the display it right
     /// </summary>
-    public void OnSaveClick()
+    public void OnDisplayClick()
     {
-        GameObject[] leaderObjects = GameObject.FindGameObjectsWithTag("leader");
-        Debug.Log("onSaveClick, find all leader tag");
-        bool saved = false;
-        string localPath = "";
-        foreach (GameObject leaderObject in leaderObjects)
+        hand.SetActive(true);
+        try
         {
-#if UNITY_EDITOR
-            localPath = "/Result/";
-#else
-                    localPath = "/Assets/Result/";
-#endif
+            GameObject tryObject = GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem;
+            GameObject position = GameObject.Find("position");
 
-            ////remove the follower the time of the save
-            //leaderObject.GetComponent<MergeJewel>().follower.transform.SetParent(null, true);
+            //Set the root item (leader) near the position of the finger
+            tryObject.transform.root.localPosition = position.transform.position;
+            tryObject.transform.root.localRotation = Quaternion.identity;
 
-            var globalPath = Application.dataPath + localPath + leaderObject.name + ".obj";
+            tryObject.transform.root.transform.SetParent(position.transform);
 
-            GameObjectExporterToObj objExporter = new GameObjectExporterToObj();
-            objExporter.Export(leaderObject, globalPath);
-
-            ////re-add the follower
-            //leaderObject.GetComponent<MergeJewel>().follower.transform.SetParent(leaderObject.transform, true);
-
-            saved = true;
-
-            Debug.Log("Save obj " + leaderObject.name);
+            tryObject.GetComponent<MergeJewel>().EnableFollower();
+        }
+        catch (Exception e)// No tryObject where found
+        {
+            Debug.Log(e);
+            return;
         }
 
-        //Add a positive of negative confirmation message if a leader was found
-        confirmationMessage.SetActive(true);
-
-        //Set the instructions in front of the player
-        Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        confirmationMessage.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.4f - cameratransform.up * 0.1f;
-        confirmationMessage.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
-
-        if (saved)
-        {
-            confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Saved GameObjects";
-            confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "Your Leader GameObjects have been saved in the following folder : ";
-            confirmationMessage.GetNamedChild("Path").GetComponent<Text>().text = Application.dataPath + localPath;
-
-        }
-        else
-        {
-            confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Failed Saving GameObjects";
-            confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "No leader where found in the scene, you need to fuze at least two gameObject together to save them";
-        }
     }
-
 
     /// <summary>
     /// Import an .obj as a Gameobject in the scene and save it in the Resources folder.
@@ -126,24 +106,23 @@ public class SettingsMenu : MonoBehaviour
             objPath = objPaths[0];
             FileInfo fi = new FileInfo(objPath);
 
-            //TODO add error message
-            if (fi.Length <= 20000000) // 40 000 ko
+            if (fi.Length <= 20 * 1000 * 1000) // 20 000 ko
             {
                 OBJLoader objLoader = new OBJLoader();
 
-                Utility.createMetaDataFile(objPath);
+                Utility.CreateMetaDataFile(objPath);
 
                 //Load the new object and give him his Components
                 GameObject obj = objLoader.Load(objPath);
 
-                obj = Utility.addImportantComponent(obj);
+                obj = Utility.AddImportantComponent(obj);
 
 
                 //Choose if it's a bracelet or a ring
 #if UNITY_EDITOR
                 string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Resources", true);
 #else
-                string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Assets/Resources", true);
+                string[] folderPat hs = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Assets/Resources", true);
 #endif
 
                 string folderPath = "";
@@ -180,8 +159,8 @@ public class SettingsMenu : MonoBehaviour
                 confirmationMessage.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
 
 
-                confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Load GameObject failed";
-                confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "Your object file must be smaller than 20'000ko, try creating it in smaller parts ";
+                confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "GameObject Load failed";
+                confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "Your object file must be smaller than 20'000 ko, try creating it in smaller parts ";
 #endif
             }
 
@@ -189,34 +168,60 @@ public class SettingsMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Display a hand to see the creation
-    /// Add the last selected item near the finger
-    /// The player still need to adjust the position the display it right
+    /// Save the leader object in the Result folder
     /// </summary>
-    public void OnDisplayClick()
+    public void OnSaveClick()
     {
-        hand.SetActive(true);
-        try
+        GameObject[] leaderObjects = GameObject.FindGameObjectsWithTag("leader");
+        Debug.Log("onSaveClick, find all leader tag");
+        bool saved = false;
+        string localPath = "";
+        foreach (GameObject leaderObject in leaderObjects)
         {
-            GameObject tryObject = GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem;
-            GameObject position = GameObject.Find("position");
+#if UNITY_EDITOR
+            localPath = "/Result/";
+#else
+                    localPath = "/Assets/Result/";
+#endif
 
-            //Set the root item (leader) near the position of the finger
-            tryObject.transform.root.localPosition = position.transform.position;
-            tryObject.transform.root.localRotation = Quaternion.identity;
+            var globalPath = Application.dataPath + localPath + leaderObject.name + ".obj";
 
-            tryObject.transform.root.transform.SetParent(position.transform);
+            GameObjectExporterToObj objExporter = new GameObjectExporterToObj();
+            objExporter.Export(leaderObject, globalPath);
 
-            tryObject.GetComponent<MergeJewel>().enableFollower();
+            saved = true;
+
+            Debug.Log("Save obj " + leaderObject.name);
         }
-        catch (Exception e)// No tryObject where found
+
+        //Add a positive of negative confirmation message if a leader was found
+        confirmationMessage.SetActive(true);
+
+        //Set the instructions in front of the player
+        Transform cameratransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        confirmationMessage.transform.position = new Vector3(cameratransform.position.x, cameratransform.position.y, cameratransform.position.z) + cameratransform.forward * 0.4f - cameratransform.up * 0.1f;
+        confirmationMessage.transform.rotation = new Quaternion(cameratransform.rotation.x, cameratransform.rotation.y, cameratransform.rotation.z, cameratransform.rotation.w);
+
+        if (saved)
         {
-            Debug.Log(e);
-            return;
-        }
+            confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Saved GameObjects";
+            confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "Your Leader GameObjects have been saved in the following folder : ";
+            confirmationMessage.GetNamedChild("Path").GetComponent<Text>().text = Application.dataPath + localPath;
 
+        }
+        else
+        {
+            confirmationMessage.GetNamedChild("Title").GetComponent<Text>().text = "Failed Saving GameObjects";
+            confirmationMessage.GetNamedChild("Description").GetComponent<Text>().text = "No leader where found in the scene, you need to fuze at least two gameObject together to save them";
+            confirmationMessage.GetNamedChild("Path").GetComponent<Text>().text = "";
+
+        }
     }
 
+
+    /*=============================================================================
+     |                               Private Functions
+     *===========================================================================*/
 
 #if DEBUG_MODE
 

@@ -16,10 +16,13 @@ using UnityEngine;
 
 public class MergeJewel : MonoBehaviour
 {
-    private GameObject instance;
+    /*=============================================================================
+    |                               Attributes
+    *===========================================================================*/
     public GameObject follower = null;
     public GameObject leader = null;
 
+    private GameObject instance;
     private bool keepWordPosition = true;
     private List<GameObject> ignoredCollisions = new List<GameObject>();
     private Vector3 spherePosition = Vector3.zero;
@@ -27,25 +30,14 @@ public class MergeJewel : MonoBehaviour
     private RigidbodyConstraints freezePosition = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
 
 
+
+    /*=============================================================================
+    |                               Unity Public Functions
+    *===========================================================================*/
     /// <summary>
-    /// Calculate and draw the sphere collider of the object
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        Vector3 child = this.GetComponentInChildren<MeshRenderer>().bounds.center;
-        MeshRenderer currentMesh = this.GetComponentInChildren<MeshRenderer>();
-        this.TryGetComponent<MeshRenderer>(out currentMesh);
-        spherePosition = currentMesh != null ? currentMesh.bounds.center : child;
-
-
-        Renderer rend = this.GetComponentInChildren<MeshRenderer>();
-        radius = (rend.bounds.size.x + rend.bounds.size.y + rend.bounds.size.z) / 3;
-
-        Gizmos.DrawWireSphere(spherePosition, radius);
-    }
-
-    /// <summary>
-    /// Checks if they are still close, or do the need to be split
+    /// Checks if the sphere of this GameObject collide with another
+    /// It separate them if they are too far
+    /// It creates a follower to indicate if it's a leader or not
     /// </summary>
     void FixedUpdate()
     {
@@ -53,8 +45,8 @@ public class MergeJewel : MonoBehaviour
         //Create an Follower to shoe the player where is the leader
         if (this.CompareTag("leader") && follower == null)
         {
-            follower = Instantiate(instance, this.GetComponentInChildren<MeshRenderer>().bounds.center, new Quaternion(0,0,0,0), null);
-            enableFollower();
+            follower = Instantiate(instance, this.GetComponentInChildren<MeshRenderer>().bounds.center, new Quaternion(0, 0, 0, 0), null);
+            EnableFollower();
         }
         else if (this.CompareTag("jewel"))
         {
@@ -66,8 +58,6 @@ public class MergeJewel : MonoBehaviour
         List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius, LayerMask.GetMask("Jewel")).ToList<Collider>();
         //Skip the current gameObject
         ObjectInRange.Remove(ObjectInRange.SingleOrDefault(r => r.gameObject == this.gameObject));
-
-
 
         //Separate the item if they are not in range
         //Reassign tag depending on the number of children
@@ -139,13 +129,12 @@ public class MergeJewel : MonoBehaviour
         //Fuze the item if they are in range
         foreach (Collider collider in ObjectInRange)
         {
-            merge(collider);
+            Merge(collider);
         }
 
     }
 
     /// <summary>
-    /// Get the ID of the object
     /// Add an actionListener to know what is the last selected item
     /// </summary>
     void Start()
@@ -154,102 +143,67 @@ public class MergeJewel : MonoBehaviour
         //Create a listener to know what is the last selected item
         var pointerHandler = this.gameObject.AddComponent<PointerHandler>();
 
-        pointerHandler.OnPointerDragged.AddListener((e) => onSelect());
-        pointerHandler.OnPointerClicked.AddListener((e) => onSelectEnd());
+        pointerHandler.OnPointerDragged.AddListener((e) => OnSelect());
+        pointerHandler.OnPointerClicked.AddListener((e) => OnSelectEnd());
 
     }
 
+    /*=============================================================================
+    |                               Unity Private Functions
+    *===========================================================================*/
     /// <summary>
-    /// Gives the handmenu what is the last selected item
-    /// Ignore collision between moving items
+    /// Calculate the center of the sphere and draw the collider of the object
     /// </summary>
-    public void onSelect()
+    private void OnDrawGizmos()
     {
-        // Debug.Log("Dragging Selection remove features + " + this.gameObject.name);
+        Vector3 child = this.GetComponentInChildren<MeshRenderer>().bounds.center;
+        MeshRenderer currentMesh = this.GetComponentInChildren<MeshRenderer>();
+        this.TryGetComponent<MeshRenderer>(out currentMesh);
+        spherePosition = currentMesh != null ? currentMesh.bounds.center : child;
 
-        GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem = this.gameObject;
 
-        //Check child of this
-        List<GameObject> listThis = new List<GameObject>();
-        this.gameObject.GetChildGameObjects(listThis);
-        foreach (GameObject child in listThis)
-        {
-            if (child.tag.Equals("jewel"))
-            {
-                if (ignoredCollisions.Contains(child)) { continue; }
-                Physics.IgnoreCollision(this.GetComponent<Collider>(), child.GetComponent<Collider>(), true);
+        Renderer rend = this.GetComponentInChildren<MeshRenderer>();
+        radius = (rend.bounds.size.x + rend.bounds.size.y + rend.bounds.size.z) / 3;
 
-                ignoredCollisions.Add(child);
-            }
-        }
-
-        if (this.CompareTag("leader") && follower != null) //update position of the follower
-            follower.GetComponent<DirectionalIndicatorModified>().enabled = false;
-
+        Gizmos.DrawWireSphere(spherePosition, radius);
     }
 
+    /*=============================================================================
+    |                               Public Functions
+    *===========================================================================*/
     /// <summary>
-    /// Restore interaction between moving items
+    /// Set the follower activ and change his position to the new one
     /// </summary>
-    public void onSelectEnd()
-    {
-        // Debug.Log("End Selection restore features + " + this.gameObject.name);
-
-        //Check child of this
-        foreach (GameObject child in ignoredCollisions)
-        {
-            if (child.tag.Equals("jewel"))
-            {
-                Physics.IgnoreCollision(this.GetComponent<Collider>(), child.GetComponent<Collider>(), false);
-            }
-        }
-        ignoredCollisions.Clear();
-
-        enableFollower();
-
-    }
-
-    public void enableFollower()
+    public void EnableFollower()
     {
         follower.GetComponent<DirectionalIndicatorModified>().enabled = true;
 
         if (this.CompareTag("leader") && follower != null) //update position of the follower
             follower.GetComponent<DirectionalIndicatorModified>().DirectionalTarget = this.GetComponentInChildren<MeshRenderer>().bounds.center;
     }
+    /*=============================================================================
+    |                               Private Functions
+    *===========================================================================*/
 
-
-    private IEnumerator RemoveConstraints(Rigidbody obj)
-    {
-        // Wait a certain time
-        yield return new WaitForSeconds(0.7f);
-
-        // Remove the constraints to allow movements
-        obj.constraints = RigidbodyConstraints.None;
-    }
-
-
-
-    //Check if object are in the same hierarchy
-    private bool isRelated(GameObject other)
+    /// <summary>
+    /// Check if two GameObjects are in the same hierarchy
+    /// </summary>
+    /// <param name="other">Object to check with this</param>
+    /// <returns type="bool">true if they have the same root</returns>
+    private bool IsRelated(GameObject other)
     {
         return other.transform.root == this.transform.root;
     }
 
-
-
     /// <summary>
     /// Merge 2 "jewel" or "leader" when they enter in collision
-    /// The merge depends on if they are already a leader or not
+    /// The merge depends on their tag
     /// </summary>
     /// <param name="other">the Collision Collider of the other GameObject it touched</param>
-    private void merge(Collider other)
+    private void Merge(Collider other)
     {
 
-        if (isRelated(other.gameObject)) { /*Debug.Log("They are Related ");*/ return; };
-
-        //        if (other.gameObject.CompareTag("Untagged")) { Debug.Log("Not a jewel"); return; } //Normally already checked by the physics
-
-        //        if (other.gameObject.CompareTag("jewel") || other.gameObject.CompareTag("leader") && this.gameObject.CompareTag("jewel") || this.gameObject.CompareTag("leader")) //Only want to check collision between jewel and leaders
+        if (IsRelated(other.gameObject)) { /*Debug.Log("They are Related ");*/ return; };
         {
             // JEWEL TRIGGER JEWEL
             if (other.gameObject.CompareTag("jewel") && this.gameObject.CompareTag("jewel"))
@@ -354,4 +308,65 @@ public class MergeJewel : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Coroutine that remove the Constraints on our object after 0.7 seconds to allow it to move 
+    /// </summary>
+    /// <param name="obj">RigidBody of the child in the merge</param>
+    private IEnumerator RemoveConstraints(Rigidbody obj)
+    {
+        // Wait a certain time
+        yield return new WaitForSeconds(0.7f);
+
+        // Remove the constraints to allow movements
+        obj.constraints = RigidbodyConstraints.None;
+    }
+
+    /// <summary>
+    /// Gives the handmenu the new last selected item
+    /// Remove collision to avoid contact between objects in the same hierarchy
+    /// </summary>
+    private void OnSelect()
+    {
+        GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem = this.gameObject;
+
+        //Check child of this
+        List<GameObject> listThis = new List<GameObject>();
+        this.gameObject.GetChildGameObjects(listThis);
+        foreach (GameObject child in listThis)
+        {
+            if (child.tag.Equals("jewel"))
+            {
+                if (ignoredCollisions.Contains(child)) { continue; }
+                Physics.IgnoreCollision(this.GetComponent<Collider>(), child.GetComponent<Collider>(), true);
+
+                ignoredCollisions.Add(child);
+            }
+        }
+
+        if (this.CompareTag("leader") && follower != null)
+            follower.GetComponent<DirectionalIndicatorModified>().enabled = false;
+
+    }
+
+    /// <summary>
+    /// Restore interaction between moving items
+    /// Renable the follower with the new position
+    /// </summary>
+    private void OnSelectEnd()
+    {
+        //Check child of this
+        foreach (GameObject child in ignoredCollisions)
+        {
+            if (child.tag.Equals("jewel"))
+            {
+                Physics.IgnoreCollision(this.GetComponent<Collider>(), child.GetComponent<Collider>(), false);
+            }
+        }
+        ignoredCollisions.Clear();
+
+        EnableFollower();
+
+    }
+
 }

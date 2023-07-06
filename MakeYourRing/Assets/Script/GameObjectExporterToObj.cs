@@ -14,12 +14,17 @@ using UnityEditor;
  |
  |     This code was taken and inspired by the OBJExporter made by aaro4130 in the dummiesman namespace.
  |     It had to be changed to work on this specific project.
- |     Credits are still his (https://assetstore.unity.com/publishers/9173)
+ |     Credits are still going to him (https://assetstore.unity.com/publishers/9173)
  |
  *===========================================================================*/
 
 public class GameObjectExporterToObj
 {
+
+    /*=============================================================================
+    |                               Attributes
+    *===========================================================================*/
+
     public bool applyPosition = true;
     public bool applyRotation = true;
     public bool applyScale = true;
@@ -31,16 +36,9 @@ public class GameObjectExporterToObj
     private const string versionString = "v2.0";
     private string lastExportFolder;
 
-    private Vector3 RotateAroundPoint(Vector3 point, Vector3 pivot, Quaternion angle)
-    {
-        return angle * (point - pivot) + pivot;
-    }
-
-    private Vector3 MultiplyVec3s(Vector3 v1, Vector3 v2)
-    {
-        return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
-    }
-
+    /*=============================================================================
+    |                               Public Functions
+    *===========================================================================*/
     public void Export(GameObject obj, string exportPath)
     {
         try
@@ -212,62 +210,7 @@ public class GameObjectExporterToObj
         }
     }
 
-    private string TryExportTexture(string propertyName, Material m)
-    {
-        if (m.HasProperty(propertyName))
-        {
-            Texture t = m.GetTexture(propertyName);
-            if (t != null)
-            {
-                return ExportTexture((Texture2D)t);
-            }
-        }
-        return "false";
-    }
-
-    private string ExportTexture(Texture2D t)
-    {
-        try
-        {
-            string exportName = lastExportFolder + "\\" + t.name + ".jpg";
-            int k = 0;
-            do
-            {
-                k++;
-                exportName = lastExportFolder + "\\" + t.name + k + ".jpg";
-            } while (File.Exists(exportName));
-
-            Texture2D exTexture = new Texture2D(t.width, t.height, TextureFormat.ARGB32, false);
-            exTexture.SetPixels(t.GetPixels());
-            System.IO.File.WriteAllBytes(exportName, exTexture.EncodeToJPG(95));
-
-#if UNITY_EDITOR
-
-            string localPath = "/Resources/EXAMPLE.txt";
-#else
-                        string localPath = "/Assets/Resources/EXAMPLE.txt";
-
-#endif            
-            string contentMeta = File.ReadAllText(Application.dataPath + localPath);
-            string exportNameMeta = exportName + ".meta";
-            System.IO.File.WriteAllText(exportNameMeta, contentMeta);
-
-            return t.name + k + ".jpg";
-        }
-        catch (System.Exception ex)
-        {
-            Debug.Log(ex + " \nCould not export texture: " + t.name + ". Is it readable?");
-            return "null";
-        }
-    }
-
-    private string ConstructOBJString(int index)
-    {
-        string idxString = index.ToString();
-        return idxString + "/" + idxString + "/" + idxString;
-    }
-
-    string MaterialToString(Material m)
+    public string MaterialToString(Material m)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -310,5 +253,75 @@ public class GameObjectExporterToObj
 
         return sb.ToString();
     }
+    /*=============================================================================
+    |                               Private Functions
+    *===========================================================================*/
+
+    private string ConstructOBJString(int index)
+    {
+        string idxString = index.ToString();
+        return idxString + "/" + idxString + "/" + idxString;
+    }
+
+    private string ExportTexture(Texture2D t)
+    {
+        try
+        {
+            string exportName = lastExportFolder + "\\" + t.name + ".jpg";
+            int k = 0;
+            do
+            {
+                k++;
+                exportName = lastExportFolder + "\\" + t.name + k + ".jpg";
+            } while (File.Exists(exportName));
+
+            Texture2D exTexture = new Texture2D(t.width, t.height, TextureFormat.ARGB32, false);
+            exTexture.SetPixels(t.GetPixels());
+            System.IO.File.WriteAllBytes(exportName, exTexture.EncodeToJPG(95));
+
+#if UNITY_EDITOR
+
+            string localPath = "/Resources/EXAMPLE.txt";
+#else
+                        string localPath = "/Assets/Resources/EXAMPLE.txt";
+
+#endif            
+            string contentMeta = File.ReadAllText(Application.dataPath + localPath);
+            string exportNameMeta = exportName + ".meta";
+            System.IO.File.WriteAllText(exportNameMeta, contentMeta);
+
+            return t.name + k + ".jpg";
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log(ex + " \nCould not export texture: " + t.name + ". Is it readable?");
+            return "null";
+        }
+    }
+
+    private Vector3 MultiplyVec3s(Vector3 v1, Vector3 v2)
+    {
+        return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+    }
+
+    private Vector3 RotateAroundPoint(Vector3 point, Vector3 pivot, Quaternion angle)
+    {
+        return angle * (point - pivot) + pivot;
+    }
+
+    private string TryExportTexture(string propertyName, Material m)
+    {
+        if (m.HasProperty(propertyName))
+        {
+            Texture t = m.GetTexture(propertyName);
+            if (t != null)
+            {
+                return ExportTexture((Texture2D)t);
+            }
+        }
+        return "false";
+    }
+
+    
 }
 

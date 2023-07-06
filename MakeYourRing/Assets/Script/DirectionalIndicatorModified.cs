@@ -16,10 +16,10 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
     {
 
         /// <summary>
-        /// The GameObject transform to point the indicator towards when this object is not in view. 
-        /// The frame of reference for viewing is defined by the Solver Handler Tracked Target Type
+        /// The original Directionnal Indicator used a Transform. since it didn't work and showed always strange location
+        /// It was changed to used only a position, it use the center of the OverlapSphere for the collisions
         /// </summary>
-        [Tooltip("The GameObject transform to point the indicator towards when this object is not in view.\nThe frame of reference for viewing is defined by the Solver Handler Tracked Target Type")]
+        [Tooltip("The GameObject position to point the indicator towards when this object is not in view.\nThe frame of reference for viewing is defined by the Solver Handler Tracked Target Type")]
         public Vector3 DirectionalTarget;
 
         /// <summary>

@@ -20,23 +20,21 @@ using UnityEngine;
 /// </summary>
 public class MainMenu : MonoBehaviour
 {
+    /*=============================================================================
+     |                               Attributes
+     *===========================================================================*/
+    public GameObject lastItem;
 
     [SerializeField]
     private GameObject settingsMenu;
     [SerializeField]
     private GameObject inventoryMenu;
 
-    public GameObject lastItem;
+    
 
-
-    /// <summary>
-    /// Open the inventory Panel
-    /// </summary>
-    public void OnInventoryClick()
-    {
-        inventoryMenu.SetActive(true);
-    }
-
+    /*=============================================================================
+     |                               Public Functions
+     *===========================================================================*/
     /// <summary>
     /// Delete last selected item
     /// </summary>
@@ -57,10 +55,22 @@ public class MainMenu : MonoBehaviour
     }
 
     /// <summary>
+    /// Open the inventory Panel
+    /// </summary>
+    public void OnInventoryClick()
+    {
+        inventoryMenu.SetActive(true);
+    }
+
+    /// <summary>
     /// Open the settings Panel
     /// </summary>
     public void OnSettingsClick()
     {
         settingsMenu.SetActive(true);
     }
+
+   /*=============================================================================
+   |                               Private Functions
+   *===========================================================================*/
 }

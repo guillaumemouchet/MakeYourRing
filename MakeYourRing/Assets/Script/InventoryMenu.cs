@@ -19,7 +19,9 @@ using UnityEngine;
 /// </summary>
 public class InventoryMenu : MonoBehaviour
 {
-
+    /*=============================================================================
+     |                               Attributes
+     *===========================================================================*/
     [SerializeField]
     private GameObject ringMenu;
     [SerializeField]
@@ -28,13 +30,9 @@ public class InventoryMenu : MonoBehaviour
     private GameObject inventoryMenu;
 
 
-    /// <summary>
-    /// Open the Ring Panel
-    /// </summary>
-    public void OnRingClick()
-    {
-        ringMenu.SetActive(true);
-    }
+    /*=============================================================================
+     |                               Public Functions
+     *===========================================================================*/
     /// <summary>
     /// Open the Braclet Panel
     /// </summary>
@@ -46,9 +44,22 @@ public class InventoryMenu : MonoBehaviour
     /// <summary>
     /// Close this Panel
     /// </summary>
-    public void onCloseClick()
+    public void OnCloseClick()
     {
         inventoryMenu.SetActive(false);
     }
+
+    /// <summary>
+    /// Open the Ring Panel
+    /// </summary>
+    public void OnRingClick()
+    {
+        ringMenu.SetActive(true);
+    }
+
+
+    /*=============================================================================
+     |                               Private Functions
+     *===========================================================================*/
 
 }

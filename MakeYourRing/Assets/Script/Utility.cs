@@ -16,185 +16,25 @@ using UnityEngine;
 
 public class Utility : MonoBehaviour
 {
+    /*=============================================================================
+    |                               Enum
+    *===========================================================================*/
     public enum jewelType
     {
         Ring,
         Bracelet
     }
 
-    /// <summary>
-    /// Create the global path with the local path of where are stored the assets
-    /// </summary>
-    /// <param name="type">Type of our item, will change the paths</param>
-    private static string chooseEnablePath(jewelType type)
-    {
-        string localPath = "";
-        switch (type)
-        {
-            case jewelType.Ring:
-                {
-#if UNITY_EDITOR
-                    localPath = "/Resources/Ring/";
-#else
-                        localPath = "/Assets/Resources/Ring/";
-#endif
-                }
-                break;
-
-            case jewelType.Bracelet:
-                {
-#if UNITY_EDITOR
-                    localPath = "/Resources/Bracelet/";
-#else
-                        localPath = "/Assets/Resources/Bracelet/";
-#endif
-                }
-                break;
-        }
-
-        var globalPath = Application.dataPath + localPath;
-        return globalPath;
-    }
-
-    /// <summary>
-    /// Create the path to load the asset at index i
-    /// </summary>
-    /// <param name="i">index in the list of the file</param>
-    /// <param name="objFileList">List of all the .obj path</param>
-    /// <param name="type">Type of our item, will change the paths</param>
-    private static string chooseClickPath(jewelType type, List<string> objFileList, int i)
-    {
-        string localPath = "";
-        switch (type)
-        {
-
-            case jewelType.Ring:
-                {
-#if UNITY_EDITOR
-                    localPath = "/Resources/Ring/" + objFileList[i] + ".obj";
-#else
-                    localPath = "/Assets/Resources/Ring/" + objFileList[i] + ".obj";
-#endif
-                }
-                break;
-
-            case jewelType.Bracelet:
-                {
-#if UNITY_EDITOR
-                    localPath = "/Resources/Bracelet/" + objFileList[i] + ".obj";
-#else
-                    localPath = "/Assets/Resources/Bracelet/" + objFileList[i] + ".obj";
-#endif
-                }
-                break;
-
-
-        }
-
-        var globalPath = Application.dataPath + localPath;
-        return globalPath;
-    }
-
-
-    /// <summary>
-    /// Counts the number of file that are .obj in our folder
-    /// </summary>
-    /// <param name="type">Type of our item, will change the paths</param>
-    /// <returns type="int">The size of our list</returns>
-    public static int countNumberOfButton(jewelType type)
-    {
-        var globalPath = chooseEnablePath(type);
-
-        //Get all files with .obj
-        var info = new DirectoryInfo(globalPath);
-        var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
-        return fileInfo.Count;
-    }
-
-    /// <summary>
-    /// Create a dynamic button for each found .obj in our folder up to nine by page, or else pagination is made
-    /// </summary>
-    /// <param name="objFileList">List of all the .obj path</param>
-    /// <param name="prefabButton">The button to copy, to have already some components</param>
-    /// <param name="buttonList">List of all the button, used to destroy them when closed</param>
-    /// <param name="parent">parent object of the prefab, used to have position</param>
-    /// <param name="type">Type of our item, will change the paths</param>
-    /// <param name="currentPage">We can only display 9 elements at a time, so we need to have pagination</param>
-    public static void createButton(List<string> objFileList, GameObject prefabButton, List<GameObject> buttonList, GameObject parent, jewelType type, int currentPage)
-    {
-        var nbElementPerPage = 9; //max number by panel, 
-        var globalPath = chooseEnablePath(type);
-
-        //Get all files with .obj
-        var info = new DirectoryInfo(globalPath);
-        var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
-        int count = Math.Min(nbElementPerPage, fileInfo.Count - nbElementPerPage * (currentPage - 1));
-
-        var subList = fileInfo.GetRange((currentPage - 1) * nbElementPerPage, count); //Create a sublist of the element we want to display
-
-        int i = 0;
-        int j = 0;
-        foreach (FileInfo obj in subList)
-        {
-            string name = Path.GetFileNameWithoutExtension(obj.Name);
-
-            objFileList.Add(name);
-
-            //wrap back after 3 elements
-            if (i % 3 == 0 && i != 0)
-            {
-                j++;
-            }
-
-            // Changer the position of the new buttons
-            Vector3 targetPosition = prefabButton.transform.position;
-            targetPosition.x += 0.04f * (i - 3 * j);
-            targetPosition.y -= 0.04f * j;
-
-            //Create the new button from a prefab
-            GameObject new_btn_prefab = Instantiate(prefabButton, targetPosition, Quaternion.identity, parent.transform);
-            new_btn_prefab.GetComponent<ButtonConfigHelper>().MainLabelText = name;
-            new_btn_prefab.SetActive(true);
-
-            buttonList.Add(new_btn_prefab); //Used to destroy them later
-
-            //Create a listener to have an action linked to the right file
-            int tempI = i + (currentPage - 1) * nbElementPerPage;
-            jewelType tempType = type;
-            new_btn_prefab.GetComponent<ButtonConfigHelper>().OnClick.AddListener(delegate { onItemClick(tempI, objFileList, tempType); }); // change to temp value to not have the reference but the value only
-            i++;
-
-        }
-    }
-
-
-
-    /// <summary>
-    /// Import the selected item at index i
-    /// </summary>
-    /// <param name="i">index in the list of the file</param>
-    /// <param name="objFileList">List of all the .obj path</param>
-    /// <param name="type">Type of our item, will change the paths</param>
-    private static void onItemClick(int i, List<string> objFileList, jewelType type)
-    {
-        //Debug.Log("On itemClick" + i);
-        var globalPath = chooseClickPath(type, objFileList, i);
-
-        OBJLoader objLoader = new OBJLoader();
-        //Load the file
-        GameObject obj = objLoader.Load(globalPath);
-
-        obj = addImportantComponent(obj);
-
-    }
-
+    /*=============================================================================
+    |                               Public Functions
+    *===========================================================================*/
 
     /// <summary>
     /// This method add all the Components to an .obj created in runtime
     /// </summary>
     /// <param name="obj">newly created GameObject</param>
     /// <returns>Returns the same GameObject, normally not used</returns>
-    public static GameObject addImportantComponent(GameObject obj)
+    public static GameObject AddImportantComponent(GameObject obj)
     {
         obj.AddComponent<MergeJewel>();
         obj.AddComponent<Rigidbody>();
@@ -256,12 +96,11 @@ public class Utility : MonoBehaviour
         return obj;
     }
 
-
     /// <summary>
     /// Create a Meta file with Readable at true for each PNG and JPG in the folder
     /// </summary>
     /// <param name="objPath">Folder where our object is</param>
-    public static void createMetaDataFile(string objPath)
+    public static void CreateMetaDataFile(string objPath)
     {
         //Create at runtime ".meta" files for each PNG and JPG
         string directoryFolder = Path.GetDirectoryName(objPath);
@@ -288,4 +127,150 @@ public class Utility : MonoBehaviour
             System.IO.File.WriteAllText(exportNameMeta, contentMeta);
         }
     }
+
+    /// <summary>
+    /// Counts the number of file that are .obj in our folder
+    /// </summary>
+    /// <param name="type">Type of our item, will change the paths</param>
+    /// <returns type="int">The size of our list</returns>
+    public static int CountNumberOfButton(jewelType type)
+    {
+        var globalPath = ChooseGlobalPath(type);
+
+        //Get all files with .obj
+        var info = new DirectoryInfo(globalPath);
+        var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
+        return fileInfo.Count;
+    }
+
+    /// <summary>
+    /// Create a dynamic button for each found .obj in our folder up to nine by page, or else pagination is made
+    /// </summary>
+    /// <param name="objFileList">List of all the .obj path</param>
+    /// <param name="prefabButton">The button to copy, to have already some components</param>
+    /// <param name="buttonList">List of all the button, used to destroy them when closed</param>
+    /// <param name="parent">parent object of the prefab, used to have position</param>
+    /// <param name="type">Type of our item, will change the paths</param>
+    /// <param name="currentPage">We can only display 9 elements at a time, so we need to have pagination</param>
+    public static void CreateButton(List<string> objFileList, GameObject prefabButton, List<GameObject> buttonList, GameObject parent, jewelType type, int currentPage)
+    {
+        var nbElementPerPage = 9; //max number by panel, 
+        var globalPath = ChooseGlobalPath(type);
+
+        //Get all files with .obj
+        var info = new DirectoryInfo(globalPath);
+        var fileInfo = info.GetFiles("*.obj").ToList<FileInfo>();
+        int count = Math.Min(nbElementPerPage, fileInfo.Count - nbElementPerPage * (currentPage - 1));
+
+        var subList = fileInfo.GetRange((currentPage - 1) * nbElementPerPage, count); //Create a sublist of the element we want to display
+
+        int i = 0;
+        int j = 0;
+        foreach (FileInfo obj in subList)
+        {
+            string name = Path.GetFileNameWithoutExtension(obj.Name);
+
+            objFileList.Add(name);
+
+            //wrap back after 3 elements
+            if (i % 3 == 0 && i != 0)
+            {
+                j++;
+            }
+
+            // Changer the position of the new buttons
+            Vector3 targetPosition = prefabButton.transform.position;
+            targetPosition.x += 0.04f * (i - 3 * j);
+            targetPosition.y -= 0.04f * j;
+
+            //Create the new button from a prefab
+            GameObject new_btn_prefab = Instantiate(prefabButton, targetPosition, Quaternion.identity, parent.transform);
+            new_btn_prefab.GetComponent<ButtonConfigHelper>().MainLabelText = name;
+            new_btn_prefab.SetActive(true);
+
+            buttonList.Add(new_btn_prefab); //Used to destroy them later
+
+            //Create a listener to have an action linked to the right file
+            int tempI = i + (currentPage - 1) * nbElementPerPage;
+            jewelType tempType = type;
+            new_btn_prefab.GetComponent<ButtonConfigHelper>().OnClick.AddListener(delegate { OnItemClick(tempI, objFileList, tempType); }); // change to temp value to not have the reference but the value only
+            i++;
+
+        }
+    }
+
+    /*=============================================================================
+    |                               Private Functions
+    *===========================================================================*/
+    /// <summary>
+    /// Create the global path with the local path of where are stored the assets
+    /// </summary>
+    /// <param name="type">Type of our item, will change the paths</param>
+    /// <returns type="string"> global path of the folder of the corresponding Type</returns>
+    private static string ChooseGlobalPath(jewelType type)
+    {
+        string localPath = "";
+        switch (type)
+        {
+            case jewelType.Ring:
+                {
+#if UNITY_EDITOR
+                    localPath = "/Resources/Ring/";
+#else
+                        localPath = "/Assets/Resources/Ring/";
+#endif
+                }
+                break;
+
+            case jewelType.Bracelet:
+                {
+#if UNITY_EDITOR
+                    localPath = "/Resources/Bracelet/";
+#else
+                        localPath = "/Assets/Resources/Bracelet/";
+#endif
+                }
+                break;
+        }
+
+        var globalPath = Application.dataPath + localPath;
+        return globalPath;
+    }
+
+    /// <summary>
+    /// Create the path to load the asset at index i
+    /// </summary>
+    /// <param name="i">index in the list of the file</param>
+    /// <param name="objFileList">List of all the .obj path</param>
+    /// <param name="type">Type of our item, will change the paths</param>
+    /// <returns type="string"> global path of specified object/returns>
+
+    private static string ChooseClickPath(jewelType type, List<string> objFileList, int i)
+    {
+        string path = ChooseGlobalPath(type);
+        return path + objFileList[i] + ".obj";
+
+    }
+
+    /// <summary>
+    /// Import the selected item at index i
+    /// </summary>
+    /// <param name="i">index in the list of the file</param>
+    /// <param name="objFileList">List of all the .obj path</param>
+    /// <param name="type">Type of our item, will change the paths</param>
+    private static void OnItemClick(int i, List<string> objFileList, jewelType type)
+    {
+        //Debug.Log("On itemClick" + i);
+        var Path = ChooseClickPath(type, objFileList, i);
+
+        OBJLoader objLoader = new OBJLoader();
+        //Load the file
+        GameObject obj = objLoader.Load(Path);
+
+        AddImportantComponent(obj);
+
+    }
+
+
+
 }

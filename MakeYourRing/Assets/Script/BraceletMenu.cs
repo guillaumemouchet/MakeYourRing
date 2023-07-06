@@ -12,6 +12,13 @@ using UnityEngine;
 
 public class BraceletMenu : MonoBehaviour
 {
+
+    /*=============================================================================
+     |                               Attributes
+     *===========================================================================*/
+    public int numberOfPages;
+    public int currentPage;
+
     [SerializeField]
     private GameObject btnBack;
 
@@ -25,85 +32,59 @@ public class BraceletMenu : MonoBehaviour
     private GameObject prefabButton;
 
     [SerializeField]
-    private GameObject parent;
+    private GameObject parent; //Parent Panel, used for positioning
 
     private List<string> objFileList = new List<string>();
 
     private List<GameObject> buttonList = new List<GameObject>();
 
-    public int numberOfPages;
-    public int currentPage;
+    private double maxNbElementPerPages = 9;
 
-    private double maxNbElementPerPages = 9.0;
+    
 
+
+    /*=============================================================================
+    |                               Unity Public Functions
+    *===========================================================================*/
     void OnDisable()
     {
         objFileList.Clear();
     }
 
-
-
     /// <summary>
-    /// Create the first page for the pagination, as well as couting the max number of pages
+    /// Create the first page for the pagination, as well as counting the max number of pages
     /// </summary>
     void OnEnable()
     {
         currentPage = 1;
         //Pagination
-        numberOfPages = (int)Math.Ceiling(Utility.countNumberOfButton(Utility.jewelType.Bracelet) / maxNbElementPerPages);
+        numberOfPages = (int)Math.Ceiling(Utility.CountNumberOfButton(Utility.jewelType.Bracelet) / maxNbElementPerPages);
 
         ////Create a button for each .obj in our resource folder
-        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
+        Utility.CreateButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
         btnBack.SetActive(false);
         btnForward.SetActive(numberOfPages > 1);
 
     }
 
 
+   /*=============================================================================
+    |                               Public Functions
+    *===========================================================================*/
     /// <summary>
-    /// Change the current pagination and display other GameObjects
-    /// Change visibily of the buttons depending on the number of pages
+    /// Go back one page in the pagination
     /// </summary>
-    public void onBackClick()
+    public void OnBackClick()
     {
-        foreach (GameObject btn in buttonList)
-        {
-            Destroy(btn);
-        }
         currentPage--;
-        //Display new buttons
-        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
-
-        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
-
-        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
-    }
-
-    /// <summary>
-    /// Change the current pagination and display other GameObjects
-    /// Change visibily of the buttons depending on the number of pages
-    /// </summary>
-    public void onFrontClick()
-    {
-        foreach (GameObject btn in buttonList)
-        {
-            Destroy(btn);
-        }
-        currentPage++;
-        //display new
-        Utility.createButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
-
-        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
-
-        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+        ChangePage();
 
     }
 
-
     /// <summary>
-    /// On the close of the panel we want to destroy the button
+    /// Delete all buttons before closing the panel
     /// </summary>
-    public void onCloseClick()
+    public void OnCloseClick()
     {
         foreach (GameObject btn in buttonList)
         {
@@ -114,10 +95,42 @@ public class BraceletMenu : MonoBehaviour
     }
 
     /// <summary>
+    /// go forward one page in the pagination
+    /// </summary>
+    public void OnFrontClick()
+    {
+        currentPage++;
+        ChangePage();
+    }
+
+
+   /*=============================================================================
+    |                               Private Functions
+    *===========================================================================*/
+    /// <summary>
+    /// Change the current pagination and display other Buttons
+    /// Change visibily of the forward and back buttons depending on the number of pages
+    /// </summary>
+    private void ChangePage()
+    {
+        foreach (GameObject btn in buttonList)
+        {
+            Destroy(btn);
+        }
+        //display new
+        Utility.CreateButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
+
+        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
+
+        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+    }
+
+#if DEBUG_MODE
+    /// <summary>
     /// Import the selected item at index i
     /// </summary>
     /// <param name="i">index in the list of the file</param>
-    public void onItemClickDebug(int i)
+    private void OnItemClickDebug(int i)
     {
         Debug.Log("On itemClick" + i);
 
@@ -132,12 +145,10 @@ public class BraceletMenu : MonoBehaviour
         //Load the file
         GameObject obj = objLoader.Load(globalPath);
 
-        Utility.addImportantComponent(obj); //Add the important Components
+        Utility.AddImportantComponent(obj); //Add the important Components
 
     }
 
-
-#if DEBUG_MODE
     /// <summary>
     /// This method adds quick button for debug purpous
     /// </summary>
@@ -145,7 +156,7 @@ public class BraceletMenu : MonoBehaviour
     {
         if (GUI.Button(new Rect(370, 40, 150, 40), "item click bracelet 0"))
         {
-            onItemClickDebug(0);
+            OnItemClickDebug(0);
         }
     }
 #endif
