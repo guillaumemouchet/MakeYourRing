@@ -979,7 +979,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74529760}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.09, z: 1.222}
+  m_LocalPosition: {x: 0, y: -0.1, z: 1.2}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 849256058}
@@ -4217,7 +4217,7 @@ MonoBehaviour:
     does it work ?
 
 
-    1. Look at your hand to see the hand menu.
+    1. Look at your hand to open the hand menu.
 
     2. Open
     the Inventory to access already-imported assets.
@@ -4235,9 +4235,9 @@ MonoBehaviour:
     display.
 
 
-    Your imported asset need to be stored in the either the Bracelet
-    or Ring folder shown in the file system, or else you won''t have quick acces
-    from the Inventory.
+    Your imported asset need to be stored in either the Bracelet or
+    Ring folder shown in the file system, or else you won''t have quick acces from
+    the Inventory.
 
 
     The red arrows show the leader of your group of object,
@@ -8049,10 +8049,10 @@ MonoBehaviour:
   smoothing: 1
   lifetime: 0
   DirectionalTarget: {x: 0, y: 0, z: 0}
-  MinIndicatorScale: 0.05
-  MaxIndicatorScale: 0.4
-  VisibilityScaleFactor: 0.3
-  ViewOffset: 0.15
+  MinIndicatorScale: 0.1
+  MaxIndicatorScale: 0.2
+  VisibilityScaleFactor: 0.2
+  ViewOffset: 0.05
 --- !u!1001 &940789997
 PrefabInstance:
   m_ObjectHideFlags: 0

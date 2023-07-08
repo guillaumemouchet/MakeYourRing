@@ -122,7 +122,7 @@ public class SettingsMenu : MonoBehaviour
 #if UNITY_EDITOR
                 string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Resources", true);
 #else
-                string[] folderPat hs = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Assets/Resources", true);
+                string[] folderPaths = StandaloneFileBrowser.OpenFolderPanel("Save as a Ring or Bracelet", Application.dataPath + "/Assets/Resources", true);
 #endif
 
                 string folderPath = "";

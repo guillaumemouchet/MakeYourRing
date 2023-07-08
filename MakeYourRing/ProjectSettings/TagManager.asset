@@ -43,6 +43,12 @@ TagManager:
   - 
   - Spatial Awareness
   m_SortingLayers:
+  - name: Jewel
+    uniqueID: 693744597
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 1258842075
     locked: 0

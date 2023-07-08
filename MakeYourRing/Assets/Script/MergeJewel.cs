@@ -176,10 +176,12 @@ public class MergeJewel : MonoBehaviour
     /// </summary>
     public void EnableFollower()
     {
-        follower.GetComponent<DirectionalIndicatorModified>().enabled = true;
-
         if (this.CompareTag("leader") && follower != null) //update position of the follower
+        {
+            follower.GetComponent<DirectionalIndicatorModified>().enabled = true;
+
             follower.GetComponent<DirectionalIndicatorModified>().DirectionalTarget = this.GetComponentInChildren<MeshRenderer>().bounds.center;
+        }
     }
     /*=============================================================================
     |                               Private Functions
