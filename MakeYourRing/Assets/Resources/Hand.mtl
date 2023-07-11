@@ -1,0 +1,8 @@
+newmtl Arm (Instance)
+Kd 0.8 0.8 0.8
+Tr 0.0
+d 1.0
+Ks 1 1 1
+map_Kd Arms1.jpg
+illum 2
+

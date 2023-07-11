@@ -21,3 +21,5 @@ Many diffrent branch exist, the important ones are :
 - all the other branch are for developpment purpous only
 
 If you are intriged on how and when I worked, and all the problems I encontered, you can go see "Journal de Bord", where I try to say and show on what i'm working on currently.
+
+He-arc tous droits réservé.

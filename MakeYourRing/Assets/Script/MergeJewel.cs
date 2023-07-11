@@ -41,7 +41,7 @@ public class MergeJewel : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-
+        calculateCenter();
         //Create an Follower to shoe the player where is the leader
         if (this.CompareTag("leader") && follower == null)
         {
@@ -156,15 +156,7 @@ public class MergeJewel : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        Vector3 child = this.GetComponentInChildren<MeshRenderer>().bounds.center;
-        MeshRenderer currentMesh = this.GetComponentInChildren<MeshRenderer>();
-        this.TryGetComponent<MeshRenderer>(out currentMesh);
-        spherePosition = currentMesh != null ? currentMesh.bounds.center : child;
-
-
-        Renderer rend = this.GetComponentInChildren<MeshRenderer>();
-        radius = (rend.bounds.size.x + rend.bounds.size.y + rend.bounds.size.z) / 3;
-
+        calculateCenter();
         Gizmos.DrawWireSphere(spherePosition, radius);
     }
 
@@ -186,6 +178,19 @@ public class MergeJewel : MonoBehaviour
     /*=============================================================================
     |                               Private Functions
     *===========================================================================*/
+
+
+    private void calculateCenter()
+    {
+        Vector3 child = this.GetComponentInChildren<MeshRenderer>().bounds.center;
+        MeshRenderer currentMesh = this.GetComponentInChildren<MeshRenderer>();
+        this.TryGetComponent<MeshRenderer>(out currentMesh);
+        spherePosition = currentMesh != null ? currentMesh.bounds.center : child;
+
+
+        Renderer rend = this.GetComponentInChildren<MeshRenderer>();
+        radius = (rend.bounds.size.x + rend.bounds.size.y + rend.bounds.size.z) / 3;
+    }
 
     /// <summary>
     /// Check if two GameObjects are in the same hierarchy
@@ -218,7 +223,7 @@ public class MergeJewel : MonoBehaviour
                     //One leader become the leader of the other
                     other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<MergeJewel>().leader = this.leader;
                     other.gameObject.GetComponent<MergeJewel>().leader.transform.SetParent(this.leader.transform, keepWordPosition);
-
+                    other.gameObject.GetComponent<MergeJewel>().leader.tag = "jewel";
                     StartCoroutine(RemoveConstraints(other.gameObject.GetComponent<MergeJewel>().leader.GetComponent<Rigidbody>()));
 
                     return;
@@ -331,7 +336,10 @@ public class MergeJewel : MonoBehaviour
     private void OnSelect()
     {
         GameObject.FindWithTag("handMenu").GetComponent<MainMenu>().lastItem = this.gameObject;
-
+        if (this.CompareTag("leader") && follower != null)
+        {
+            follower.GetComponent<DirectionalIndicatorModified>().enabled = false;
+        }
         //Check child of this
         List<GameObject> listThis = new List<GameObject>();
         this.gameObject.GetChildGameObjects(listThis);
@@ -346,8 +354,7 @@ public class MergeJewel : MonoBehaviour
             }
         }
 
-        if (this.CompareTag("leader") && follower != null)
-            follower.GetComponent<DirectionalIndicatorModified>().enabled = false;
+        
 
     }
 

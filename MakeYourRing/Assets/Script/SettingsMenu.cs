@@ -94,7 +94,7 @@ public class SettingsMenu : MonoBehaviour
              new ExtensionFilter("Object file", "obj"),
          };
 #if UNITY_EDITOR
-        string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object smaller than 10 000 ko", Application.dataPath + "/Assets", extensions, true);
+        string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object smaller than 20 000 ko", Application.dataPath + "/Assets", extensions, true);
 #else
             string[] objPaths = StandaloneFileBrowser.OpenFilePanel("Choose object", Application.dataPath + "/Assets/Assets/", extensions, true);
 #endif
