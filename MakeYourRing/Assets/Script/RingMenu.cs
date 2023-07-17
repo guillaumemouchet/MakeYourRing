@@ -117,9 +117,10 @@ public class RingMenu : MonoBehaviour
         //display new
         Utility.CreateButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Ring, currentPage);
 
-        btnForward.SetActive(currentPage < numberOfPages);//Current page is smaller than the max number of page, we cant still go forward
 
-        btnBack.SetActive(currentPage > 1);  //Current page bigger than the min, we can come back
+        btnForward.SetActive(currentPage < numberOfPages); //Current page is smaller than the max number of page, we cant still go forward
+        btnBack.SetActive(currentPage > 1); //Current page bigger than the min, we can come back
+        btnBack.SetActive(currentPage > 1); //Current page bigger than the min, we can come back
     }
 
 #if DEBUG_MODE

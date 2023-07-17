@@ -27,7 +27,10 @@ public class MergeJewel : MonoBehaviour
     private List<GameObject> ignoredCollisions = new List<GameObject>();
     private Vector3 spherePosition = Vector3.zero;
     private float radius = 0.2f;
-    private RigidbodyConstraints freezePosition = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+    private RigidbodyConstraints freezePosition =
+        RigidbodyConstraints.FreezePositionX 
+        | RigidbodyConstraints.FreezePositionY 
+        | RigidbodyConstraints.FreezePositionZ;
 
 
 
@@ -55,7 +58,10 @@ public class MergeJewel : MonoBehaviour
         }
 
         //Find the object in range of the sphere
-        List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius, LayerMask.GetMask("Jewel")).ToList<Collider>();
+
+        List<Collider> ObjectInRange = Physics.OverlapSphere(spherePosition, radius,
+        LayerMask.GetMask("Jewel")).ToList<Collider>();
+
         //Skip the current gameObject
         ObjectInRange.Remove(ObjectInRange.SingleOrDefault(r => r.gameObject == this.gameObject));
 
@@ -348,7 +354,9 @@ public class MergeJewel : MonoBehaviour
             if (child.tag.Equals("jewel"))
             {
                 if (ignoredCollisions.Contains(child)) { continue; }
-                Physics.IgnoreCollision(this.GetComponent<Collider>(), child.GetComponent<Collider>(), true);
+
+                Physics.IgnoreCollision(this.GetComponent<Collider>(),
+                    child.GetComponent<Collider>(), true);
 
                 ignoredCollisions.Add(child);
             }

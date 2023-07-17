@@ -166,6 +166,7 @@ public class GameObjectExporterToObj
                         int idx2 = tris[t] + 1 + lastIndex;
                         int idx1 = tris[t + 1] + 1 + lastIndex;
                         int idx0 = tris[t + 2] + 1 + lastIndex;
+
                         int faceOrder = (int)Mathf.Clamp((mf.gameObject.transform.lossyScale.x * mf.gameObject.transform.lossyScale.z), -1, 1);
 
                         if (faceOrder <= 0)

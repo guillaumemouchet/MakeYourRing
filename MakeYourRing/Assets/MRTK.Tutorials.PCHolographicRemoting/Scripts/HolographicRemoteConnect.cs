@@ -35,7 +35,8 @@ public class HolographicRemoteConnect : MonoBehaviour
     * Changing the codex doesn't change the FPS
     * Changing the MaxBitrate doestn't change the FPS
     * */
-    private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration() { RemotePort = 8265, MaxBitrateKbps = 20000, VideoCodec = RemotingVideoCodec.H265, EnableAudio = false };
+    private RemotingConnectConfiguration remotingConfiguration_1 = new RemotingConnectConfiguration()
+    { RemotePort = 8265, MaxBitrateKbps = 20000, VideoCodec = RemotingVideoCodec.H265, EnableAudio = false };
 
 
     /// <summary>
