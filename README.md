@@ -1,10 +1,9 @@
 # MakeYourRing
 
-"What is MakeYourRing?" I see you ask me.\
-MakeYourRing is my Bachelor Project, it's an application to help users create different types of jewels.<br>
+MakeYourRing is a Bachelor Project made by Guillaume Mouchet, it's an application to help users create different types of jewels in augmented reality.<br>
 You'll need a computer to run the application, and a Hololens 2 to create a remote access to it.<br>
 You'll be able to import your own asset to work on them, save you creation and delete what you don't like.<br>
-You can also take the different parts and fuze them together, you'll always have a leader to help you move all of them at once.
+You can also take the different parts and fuse them together, you'll always have a leader to help you move all of them at once.
 
 One thing to take note of is that you can for know only use ".obj" object to import, and those need to be on your computer, the Hololens 2 is only used like a "touch screen".
 
