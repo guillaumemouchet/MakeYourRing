@@ -4224,26 +4224,26 @@ MonoBehaviour:
     2. Open
     the Inventory to access already-imported assets.
 
-    3. Go to Settings to import
-    new ones.
+    3. Or go to the Settings
+    to import new ones.
 
 
-    Once you have loaded new assets, you can use your hands to move
-    and fuse them together. You may have a bit of latency when they come close together.
+    Once you have loaded new assets, you can use your hands
+    to move and fuse them together. You may have a bit of latency when they come
+    close together.
 
 
-    You
-    can also delete the last selected item, save your creations, or see it on a hand
-    display.
+    You can also delete the last selected item, save your creations,
+    or see it on a hand display.
 
 
-    Your imported asset need to be stored in either the Bracelet or
-    Ring folder shown in the file system, or else you won''t have quick acces from
-    the Inventory.
+    Your imported asset need to be stored in either
+    the Bracelet or Ring folder shown in the file system, or else you won''t have
+    quick acces from the Inventory.
 
 
-    The red arrows show the leader of your group of object,
-    you can select it to make all his objects move at the same time.'
+    The red arrows show the leader of your
+    group of object, you can select it to make all his objects move at the same time.'
 --- !u!222 &450930368
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11688,7 +11688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 645975356083136177, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645975356083136177, guid: 5aa0240499b935e4d840aba5ab1149f6, type: 3}
       propertyPath: m_TagString
@@ -25049,7 +25049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &45127824549143382
 AudioSource:
   m_ObjectHideFlags: 0
