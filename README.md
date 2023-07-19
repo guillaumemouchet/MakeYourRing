@@ -26,7 +26,7 @@ If you are intriged on how and when I worked, and all the problems I encontered,
 1. first of all you'll need [<span dir="">Unity Hub</span>](https://unity.com/unity-hub) with this specific version [<span dir="">2020.3.45</span>](https://unity.com/releases/editor/whats-new/2020.3.45)<span dir=""> LTS</span>
 2. you have to clone the [projet](https://gitlab-etu.ing.he-arc.ch/isc/2022-23/niveau-3/3285-tb-il/276/MakeYourRing/-/tree/POC?ref_type=heads) with the following command \
    \`\`\`git clone git@gitlab-etu.ing.he-arc.ch:isc/2022-23/niveau-3/3285-tb-il/276/MakeYourRing.git\`\`\`
-3. Chack that you are on the wanted branch, main is the release version
+3. Check that you are on the wanted branch, main is the release version
 4. In Unity Editor you need to go on "Open" and select your project, your project is defined in the folder "Asset" in the hierarchy.
 5. The importation can take a while
 6. Errors can appear with 3ds Max, once the projet builded or tested the errors will be gone.
