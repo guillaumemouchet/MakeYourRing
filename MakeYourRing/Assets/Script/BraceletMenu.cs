@@ -59,7 +59,7 @@ public class BraceletMenu : MonoBehaviour
         currentPage = 1;
         //Pagination
         numberOfPages = (int)Math.Ceiling(Utility.CountNumberOfButton(Utility.jewelType.Bracelet) / maxNbElementPerPages);
-
+        Debug.Log("NUMBER OF PAGE" + numberOfPages); 
         ////Create a button for each .obj in our resource folder
         Utility.CreateButton(objFileList, prefabButton, buttonList, parent, Utility.jewelType.Bracelet, currentPage);
         btnBack.SetActive(false);
