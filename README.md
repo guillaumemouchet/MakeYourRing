@@ -11,9 +11,9 @@ One thing to take note of is that you can for know only use ".obj" object to imp
 
 MakeYourRing is a projet made with Unity and is made to work on Hololens 2.
 
-You'll find many informations in the wiki, "Recherche et Documentation" gives informations on how to build a project from scratch or how to clone and continue this project.
+You'll find many informations in the wiki, two pages are there to help you create a project from scratch for PC Remoting or Universal Windows Platform. How to clone is in the end of the readme in english or you can find it in french on the wiki.
 
-Many diffrent branch exist, the important ones are :
+Few branch exists, the important ones are :
 
 - POC (Proof of Concept), it's the first iteration of the project to show that it was possible to acces file system and many other things on the Hololens 2
 - main, you'll find the finished version on this branch
