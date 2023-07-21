@@ -364,8 +364,6 @@ namespace Dummiesman
             return Load(input);
         }
 
-
-
         /// <summary>
         /// Load an OBJ and MTL file from a file path.
         /// </summary>

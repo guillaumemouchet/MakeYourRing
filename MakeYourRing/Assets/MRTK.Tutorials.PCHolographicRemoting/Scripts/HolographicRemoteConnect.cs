@@ -12,7 +12,7 @@ using System.Net;
  *===========================================================================*/
 
 /**
- * Some test where made to see if multiplayer was possible so with 2 Hololens 2
+ * Some test where made to see if multiplayer was possible on two Hololens 2
  * One app, started 2 times doesn't work -> same port, differant IP
  * One app, started 2 times doesn't work -> different IP and port
  * One app, started once doesn't work -> 2 IP and 2 Ports where given

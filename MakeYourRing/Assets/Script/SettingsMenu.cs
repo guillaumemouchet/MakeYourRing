@@ -29,7 +29,7 @@ using Windows.Storage;
  **/
 
 
-// TODO : Find a way to add the Asset folder on each build
+// Add the Asset folder on each build
 public class SettingsMenu : MonoBehaviour
 {
     /*=============================================================================

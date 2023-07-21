@@ -362,8 +362,6 @@ public class MergeJewel : MonoBehaviour
             }
         }
 
-        
-
     }
 
     /// <summary>
